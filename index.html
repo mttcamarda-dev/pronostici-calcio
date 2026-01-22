@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pronostici Calcio - Partite Live</title>
+    <title>Pronostici Calcio - Tutte le Partite di Oggi</title>
 
     <style>
         /* Global Styles */
@@ -55,6 +55,33 @@
             opacity: 0.8;
         }
 
+        /* API Setup Notice */
+        .setup-notice {
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .setup-notice h3 {
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .setup-notice ol {
+            margin-left: 20px;
+            line-height: 1.6;
+        }
+
+        .setup-notice code {
+            background: rgba(0,0,0,0.2);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
         /* API Notice */
         .api-notice {
             background: rgba(255, 255, 255, 0.15);
@@ -68,11 +95,11 @@
         }
 
         .api-notice.error {
-            background: rgba(231, 76, 60, 0.8);
+            background: rgba(231, 76, 60, 0.9);
         }
 
         .api-notice.success {
-            background: rgba(46, 204, 113, 0.8);
+            background: rgba(46, 204, 113, 0.9);
         }
 
         /* Loading */
@@ -137,6 +164,14 @@
             border-radius: 15px;
             font-size: 0.75em;
             font-weight: 600;
+            max-width: 200px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .league-badge.european {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
         }
 
         .match-status {
@@ -191,6 +226,13 @@
         .team {
             flex: 1;
             text-align: center;
+        }
+
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-bottom: 8px;
         }
 
         .team-name {
@@ -363,6 +405,11 @@
             .team-name {
                 font-size: 0.85em;
             }
+
+            .team-logo {
+                width: 35px;
+                height: 35px;
+            }
         }
     </style>
 </head>
@@ -370,10 +417,22 @@
     <div class="container">
         <header>
             <h1>⚽ Pronostici Calcio</h1>
-            <p class="subtitle">Partite Live e Risultati Reali</p>
+            <p class="subtitle">Tutte le Partite di Oggi - Campionati e Coppe Europee</p>
             <p class="date" id="today-date">Caricamento...</p>
             <p class="last-updated" id="last-updated"></p>
         </header>
+
+        <div id="setup-notice" class="setup-notice" style="display: none;">
+            <h3>🔑 Configurazione API Gratuita</h3>
+            <ol>
+                <li>Vai su <strong>RapidAPI.com</strong> e crea un account gratuito</li>
+                <li>Cerca <strong>"API-Football"</strong> e sottoscrivi il piano <strong>FREE</strong> (100 richieste/giorno)</li>
+                <li>Copia la tua <strong>X-RapidAPI-Key</strong></li>
+                <li>Apri questo file HTML e inserisci la chiave alla <strong>riga 545</strong>: <code>API_KEY: 'TUA_CHIAVE_QUI'</code></li>
+                <li>Salva e ricarica la pagina</li>
+            </ol>
+            <p style="margin-top: 10px;"><strong>Piano gratuito include:</strong> Tutte le partite di oggi (campionati + Champions + Europa League + Conference League)</p>
+        </div>
 
         <div id="api-notice" class="api-notice" style="display: none;"></div>
 
@@ -386,39 +445,39 @@
         <div id="error-container"></div>
 
         <div class="stats-section" id="stats-section" style="display: none;">
-            <h2>📊 Statistiche Live</h2>
+            <h2>📊 Statistiche di Oggi</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="total-matches">0</div>
-                    <div class="stat-label">Partite</div>
+                    <div class="stat-label">Partite Totali</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-leagues">0</div>
+                    <div class="stat-label">Competizioni</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="live-matches">0</div>
-                    <div class="stat-label">Live</div>
+                    <div class="stat-label">Live Ora</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="finished-matches">0</div>
-                    <div class="stat-label">Finite</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number" id="upcoming-matches">0</div>
-                    <div class="stat-label">Da Giocare</div>
+                    <div class="stat-number" id="european-cups">0</div>
+                    <div class="stat-label">Coppe Europee</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ===== API PUBBLICHE (NESSUNA KEY RICHIESTA) =====
-        const API_ENDPOINTS = {
-            // API Sports RC - Partite live di calcio
-            SPORTSRC: 'https://api.sportsrc.org/?data=matches&category=football',
+        // ===== CONFIGURAZIONE API =====
+        const API_CONFIG = {
+            // ⚠️ INSERISCI QUI LA TUA API KEY GRATUITA DA RAPIDAPI
+            // Ottienila su: https://rapidapi.com/api-sports/api/api-football
+            // Piano FREE: 100 richieste/giorno (sufficiente per uso personale)
+            API_KEY: '', // ← INSERISCI LA TUA CHIAVE QUI
 
-            // OpenLigaDB - Bundesliga e altre leghe tedesche
-            OPENLIGA_BL1: 'https://www.openligadb.de/api/getmatchdata/bl1',  // Bundesliga
-
-            // Timeout per richieste
-            TIMEOUT: 10000
+            API_HOST: 'api-football-v1.p.rapidapi.com',
+            API_BASE_URL: 'https://api-football-v1.p.rapidapi.com/v3',
+            TIMEOUT: 15000
         };
 
         // ===== UTILITY DATE =====
@@ -432,30 +491,28 @@
             return date.toLocaleDateString('it-IT', options);
         }
 
-        function formatTime(dateString) {
+        function formatTime(utcDateString) {
             try {
-                const date = new Date(dateString);
-                if (isNaN(date.getTime())) {
-                    return dateString; // Ritorna stringa originale se non valida
-                }
+                const date = new Date(utcDateString);
+                if (isNaN(date.getTime())) return utcDateString;
                 return date.toLocaleTimeString('it-IT', {
                     hour: '2-digit',
                     minute: '2-digit'
                 });
             } catch (error) {
-                return dateString;
+                return utcDateString;
             }
         }
 
         // ===== FETCH CON TIMEOUT =====
-        async function fetchWithTimeout(url, timeout = API_ENDPOINTS.TIMEOUT) {
+        async function fetchWithTimeout(url, options, timeout = API_CONFIG.TIMEOUT) {
             const controller = new AbortController();
             const id = setTimeout(() => controller.abort(), timeout);
 
             try {
                 const response = await fetch(url, {
-                    signal: controller.signal,
-                    mode: 'cors'
+                    ...options,
+                    signal: controller.signal
                 });
                 clearTimeout(id);
                 return response;
@@ -465,168 +522,101 @@
             }
         }
 
-        // ===== FETCH PARTITE DA SPORTSRC =====
-        async function fetchSportsRCMatches() {
-            try {
-                console.log('Fetching from SportsRC...');
-                const response = await fetchWithTimeout(API_ENDPOINTS.SPORTSRC);
-
-                if (!response.ok) {
-                    throw new Error(`SportsRC API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('SportsRC response:', data);
-
-                // Parsare i dati SportsRC (struttura può variare)
-                const matches = [];
-
-                if (data && Array.isArray(data)) {
-                    data.forEach(match => {
-                        // Estrai dati dalla struttura SportsRC
-                        const homeTeam = match.home_team || match.homeTeam || match.team1 || 'Unknown';
-                        const awayTeam = match.away_team || match.awayTeam || match.team2 || 'Unknown';
-                        const status = match.status || match.state || 'scheduled';
-                        const time = match.time || match.date || match.kickoff || new Date().toISOString();
-                        const homeScore = match.home_score || match.score1 || null;
-                        const awayScore = match.away_score || match.score2 || null;
-                        const league = match.league || match.competition || 'Football';
-
-                        matches.push({
-                            homeTeam,
-                            awayTeam,
-                            status,
-                            time,
-                            homeScore,
-                            awayScore,
-                            league,
-                            source: 'SportsRC'
-                        });
-                    });
-                }
-
-                return matches;
-            } catch (error) {
-                console.warn('SportsRC fetch failed:', error.message);
-                return [];
+        // ===== FETCH TUTTE LE PARTITE DI OGGI =====
+        async function fetchTodayMatches() {
+            if (!API_CONFIG.API_KEY) {
+                throw new Error('API_KEY_NOT_CONFIGURED');
             }
-        }
 
-        // ===== FETCH PARTITE DA OPENLIGADB =====
-        async function fetchOpenLigaMatches() {
+            const today = getTodayDate();
+            const url = `${API_CONFIG.API_BASE_URL}/fixtures?date=${today}`;
+
+            console.log('Fetching all matches for:', today);
+
             try {
-                console.log('Fetching from OpenLigaDB...');
-                const response = await fetchWithTimeout(API_ENDPOINTS.OPENLIGA_BL1);
-
-                if (!response.ok) {
-                    throw new Error(`OpenLigaDB API error: ${response.status}`);
-                }
-
-                const data = await response.json();
-                console.log('OpenLigaDB response:', data);
-
-                const matches = [];
-
-                // OpenLigaDB può ritornare array o singolo match
-                const matchesArray = Array.isArray(data) ? data : [data];
-
-                matchesArray.forEach(match => {
-                    if (!match || !match.Team1 || !match.Team2) return;
-
-                    const homeTeam = match.Team1.TeamName || 'Unknown';
-                    const awayTeam = match.Team2.TeamName || 'Unknown';
-                    const time = match.MatchDateTime || new Date().toISOString();
-
-                    // Determina stato
-                    let status = 'not-started';
-                    let homeScore = null;
-                    let awayScore = null;
-
-                    if (match.MatchIsFinished) {
-                        status = 'finished';
-                    } else if (match.MatchResults && match.MatchResults.length > 0) {
-                        status = 'live';
-                        // Prendi l'ultimo risultato
-                        const lastResult = match.MatchResults[match.MatchResults.length - 1];
-                        homeScore = lastResult.PointsTeam1;
-                        awayScore = lastResult.PointsTeam2;
+                const response = await fetchWithTimeout(url, {
+                    method: 'GET',
+                    headers: {
+                        'X-RapidAPI-Key': API_CONFIG.API_KEY,
+                        'X-RapidAPI-Host': API_CONFIG.API_HOST
                     }
-
-                    matches.push({
-                        homeTeam,
-                        awayTeam,
-                        status,
-                        time,
-                        homeScore,
-                        awayScore,
-                        league: 'Bundesliga',
-                        source: 'OpenLigaDB'
-                    });
                 });
 
-                return matches;
+                if (!response.ok) {
+                    if (response.status === 403 || response.status === 401) {
+                        throw new Error('API_KEY_INVALID');
+                    }
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('API Response:', data);
+
+                if (!data.response || data.response.length === 0) {
+                    return [];
+                }
+
+                return data.response;
             } catch (error) {
-                console.warn('OpenLigaDB fetch failed:', error.message);
-                return [];
+                console.error('Fetch error:', error);
+                throw error;
             }
         }
 
-        // ===== COMBINA DATI DA TUTTE LE API =====
-        async function fetchAllMatches() {
-            const allMatches = [];
+        // ===== IDENTIFICA COPPE EUROPEE =====
+        function isEuropeanCup(leagueName) {
+            const europeanKeywords = [
+                'champions league',
+                'europa league',
+                'conference league',
+                'uefa',
+                'euro',
+                'champions',
+                'europa'
+            ];
 
-            // Fetch da tutte le fonti in parallelo
-            const [sportsrcMatches, openligaMatches] = await Promise.all([
-                fetchSportsRCMatches(),
-                fetchOpenLigaMatches()
-            ]);
-
-            allMatches.push(...sportsrcMatches);
-            allMatches.push(...openligaMatches);
-
-            return allMatches;
+            const lowerName = leagueName.toLowerCase();
+            return europeanKeywords.some(keyword => lowerName.includes(keyword));
         }
 
-        // ===== CALCOLO PRONOSTICO BASATO SU DATI REALI =====
-        function calculatePrediction(match) {
-            const homeTeam = match.homeTeam;
-            const awayTeam = match.awayTeam;
+        // ===== CALCOLO PRONOSTICO =====
+        function calculatePrediction(fixture) {
+            const homeTeam = fixture.teams.home.name;
+            const awayTeam = fixture.teams.away.name;
 
-            // Se la partita ha già un risultato, mostralo
-            if (match.homeScore !== null && match.awayScore !== null) {
-                const homeGoals = match.homeScore;
-                const awayGoals = match.awayScore;
+            // Se c'è un risultato, mostralo
+            if (fixture.goals.home !== null && fixture.goals.away !== null) {
+                const homeGoals = fixture.goals.home;
+                const awayGoals = fixture.goals.away;
+                const isFinished = fixture.fixture.status.short === 'FT';
 
                 if (homeGoals > awayGoals) {
                     return {
                         outcome: 'VITTORIA CASA',
                         class: 'home',
-                        reason: `${homeTeam} ${match.status === 'finished' ? 'ha vinto' : 'sta vincendo'} ${homeGoals}-${awayGoals}`
+                        reason: `${homeTeam} ${isFinished ? 'ha vinto' : 'sta vincendo'} ${homeGoals}-${awayGoals}`
                     };
                 } else if (awayGoals > homeGoals) {
                     return {
                         outcome: 'VITTORIA TRASFERTA',
                         class: 'away',
-                        reason: `${awayTeam} ${match.status === 'finished' ? 'ha vinto' : 'sta vincendo'} ${awayGoals}-${homeGoals}`
+                        reason: `${awayTeam} ${isFinished ? 'ha vinto' : 'sta vincendo'} ${awayGoals}-${homeGoals}`
                     };
                 } else {
                     return {
                         outcome: 'PAREGGIO',
                         class: 'draw',
-                        reason: `Partita ${match.status === 'finished' ? 'finita' : 'attualmente'} in pareggio ${homeGoals}-${awayGoals}`
+                        reason: `Partita ${isFinished ? 'finita' : 'in corso'} ${homeGoals}-${awayGoals}`
                     };
                 }
             }
 
-            // Per partite non ancora giocate, fai analisi semplice
-            // Basato su fattori reali disponibili
-            let homeAdvantage = 1.3; // Vantaggio casalingo standard
+            // Analisi per partite da giocare
+            const homeAdvantage = 1.3;
+            const homeStrength = (homeTeam.length % 4) + 1;
+            const awayStrength = (awayTeam.length % 4) + 1;
 
-            // Analisi nome squadra per determinare forza relativa
-            const homeStrength = homeTeam.length % 4 + 1;
-            const awayStrength = awayTeam.length % 4 + 1;
-
-            let homeProbability = (homeStrength * homeAdvantage);
+            let homeProbability = homeStrength * homeAdvantage;
             let awayProbability = awayStrength;
             let drawProbability = 1.5;
 
@@ -645,19 +635,19 @@
                 return {
                     outcome: 'VITTORIA CASA',
                     class: 'home',
-                    reason: `${homeTeam} favorita in casa (${homeProbability}%). Vantaggio casalingo.`
+                    reason: `${homeTeam} favorita (${homeProbability}%). Vantaggio casalingo.`
                 };
             } else if (max === parseFloat(awayProbability)) {
                 return {
                     outcome: 'VITTORIA TRASFERTA',
                     class: 'away',
-                    reason: `${awayTeam} con buone possibilità (${awayProbability}%).`
+                    reason: `${awayTeam} favorita (${awayProbability}%).`
                 };
             } else {
                 return {
-                    outcome: 'PAREGGIO PROBABILE',
+                    outcome: 'PAREGGIO',
                     class: 'draw',
-                    reason: `Partita equilibrata (${drawProbability}% pareggio).`
+                    reason: `Equilibrata (${drawProbability}% pareggio).`
                 };
             }
         }
@@ -667,17 +657,17 @@
             let homeOdds, drawOdds, awayOdds;
 
             if (prediction.class === 'home') {
-                homeOdds = 1.75 + Math.random() * 0.5;
-                drawOdds = 3.20 + Math.random() * 0.6;
-                awayOdds = 4.00 + Math.random() * 1.0;
+                homeOdds = 1.70 + Math.random() * 0.6;
+                drawOdds = 3.10 + Math.random() * 0.7;
+                awayOdds = 4.20 + Math.random() * 1.2;
             } else if (prediction.class === 'away') {
-                homeOdds = 4.00 + Math.random() * 1.0;
-                drawOdds = 3.20 + Math.random() * 0.6;
-                awayOdds = 1.75 + Math.random() * 0.5;
+                homeOdds = 4.20 + Math.random() * 1.2;
+                drawOdds = 3.10 + Math.random() * 0.7;
+                awayOdds = 1.70 + Math.random() * 0.6;
             } else {
-                homeOdds = 2.80 + Math.random() * 0.5;
-                drawOdds = 2.70 + Math.random() * 0.4;
-                awayOdds = 2.85 + Math.random() * 0.5;
+                homeOdds = 2.70 + Math.random() * 0.6;
+                drawOdds = 2.60 + Math.random() * 0.5;
+                awayOdds = 2.80 + Math.random() * 0.6;
             }
 
             return {
@@ -688,36 +678,41 @@
         }
 
         // ===== RENDER CARD PARTITA =====
-        function renderMatchCard(match) {
-            const homeTeam = match.homeTeam;
-            const awayTeam = match.awayTeam;
-            const league = match.league;
-            const matchTime = formatTime(match.time);
+        function renderMatchCard(fixture) {
+            const homeTeam = fixture.teams.home.name;
+            const awayTeam = fixture.teams.away.name;
+            const homeLogo = fixture.teams.home.logo;
+            const awayLogo = fixture.teams.away.logo;
+            const league = fixture.league.name;
+            const matchTime = formatTime(fixture.fixture.date);
 
-            // Determina stato
+            const isEuropean = isEuropeanCup(league);
+
+            // Status
+            const status = fixture.fixture.status.short;
             let statusClass = 'not-started';
             let statusText = 'Da Giocare';
 
-            if (match.status === 'live' || match.status === 'in_play') {
+            if (status === '1H' || status === '2H' || status === 'HT' || status === 'LIVE') {
                 statusClass = 'live';
                 statusText = 'LIVE';
-            } else if (match.status === 'finished' || match.status === 'complete') {
+            } else if (status === 'FT' || status === 'AET' || status === 'PEN') {
                 statusClass = 'finished';
                 statusText = 'Finita';
             }
 
             // Score
-            const showScore = match.homeScore !== null && match.awayScore !== null;
-            const scoreDisplay = showScore ? `${match.homeScore} - ${match.awayScore}` : '';
+            const showScore = fixture.goals.home !== null && fixture.goals.away !== null;
+            const scoreDisplay = showScore ? `${fixture.goals.home} - ${fixture.goals.away}` : '';
 
-            // Calcola pronostico
-            const prediction = calculatePrediction(match);
+            // Pronostico
+            const prediction = calculatePrediction(fixture);
             const odds = statusClass !== 'finished' ? generateOdds(prediction) : null;
 
             return `
                 <div class="match-card">
                     <div class="match-header">
-                        <span class="league-badge">${league}</span>
+                        <span class="league-badge ${isEuropean ? 'european' : ''}">${league}</span>
                         <span class="match-status ${statusClass}">${statusText}</span>
                     </div>
 
@@ -728,10 +723,12 @@
 
                     <div class="teams">
                         <div class="team">
+                            <img src="${homeLogo}" alt="${homeTeam}" class="team-logo" onerror="this.style.display='none'">
                             <div class="team-name">${homeTeam}</div>
                         </div>
                         <div class="vs">VS</div>
                         <div class="team">
+                            <img src="${awayLogo}" alt="${awayTeam}" class="team-logo" onerror="this.style.display='none'">
                             <div class="team-name">${awayTeam}</div>
                         </div>
                     </div>
@@ -772,16 +769,21 @@
         }
 
         // ===== CALCOLA STATISTICHE =====
-        function calculateStats(matches) {
-            const total = matches.length;
-            const live = matches.filter(m => m.status === 'live' || m.status === 'in_play').length;
-            const finished = matches.filter(m => m.status === 'finished' || m.status === 'complete').length;
-            const upcoming = total - live - finished;
+        function calculateStats(fixtures) {
+            const total = fixtures.length;
+            const leagues = new Set(fixtures.map(f => f.league.name)).size;
+
+            const live = fixtures.filter(f => {
+                const status = f.fixture.status.short;
+                return status === '1H' || status === '2H' || status === 'HT' || status === 'LIVE';
+            }).length;
+
+            const europeanCups = fixtures.filter(f => isEuropeanCup(f.league.name)).length;
 
             document.getElementById('total-matches').textContent = total;
+            document.getElementById('total-leagues').textContent = leagues;
             document.getElementById('live-matches').textContent = live;
-            document.getElementById('finished-matches').textContent = finished;
-            document.getElementById('upcoming-matches').textContent = upcoming;
+            document.getElementById('european-cups').textContent = europeanCups;
         }
 
         // ===== CARICA PARTITE =====
@@ -791,40 +793,45 @@
             const statsSection = document.getElementById('stats-section');
             const errorContainer = document.getElementById('error-container');
             const apiNotice = document.getElementById('api-notice');
+            const setupNotice = document.getElementById('setup-notice');
 
             try {
                 // Aggiorna data
                 const today = getTodayDate();
                 document.getElementById('today-date').textContent = formatDate(today);
 
-                // Mostra notifica caricamento
+                // Nascondi setup notice
+                setupNotice.style.display = 'none';
+
+                // Mostra loading
                 apiNotice.className = 'api-notice success';
-                apiNotice.textContent = '🔄 Caricamento dati da API pubbliche...';
+                apiNotice.textContent = '🔄 Caricamento tutte le partite di oggi...';
                 apiNotice.style.display = 'block';
 
-                // Fetch partite da tutte le fonti
-                const matches = await fetchAllMatches();
+                // Fetch partite
+                const fixtures = await fetchTodayMatches();
 
                 loadingEl.style.display = 'none';
 
-                if (matches.length === 0) {
+                if (fixtures.length === 0) {
                     apiNotice.className = 'api-notice';
-                    apiNotice.textContent = '⚽ Nessuna partita disponibile al momento dalle API pubbliche.';
-                    matchesContainer.innerHTML = '<div class="no-matches">Nessuna partita disponibile al momento. Riprova più tardi!</div>';
+                    apiNotice.textContent = '⚽ Nessuna partita programmata per oggi.';
+                    matchesContainer.innerHTML = '<div class="no-matches">Nessuna partita in programma oggi!</div>';
                     matchesContainer.style.display = 'block';
                     return;
                 }
 
                 // Render partite
                 apiNotice.className = 'api-notice success';
-                apiNotice.textContent = `✅ Caricate ${matches.length} partite da fonti pubbliche`;
+                const europeanCount = fixtures.filter(f => isEuropeanCup(f.league.name)).length;
+                apiNotice.textContent = `✅ ${fixtures.length} partite caricate (${europeanCount} coppe europee)`;
 
-                matchesContainer.innerHTML = matches.map(renderMatchCard).join('');
+                matchesContainer.innerHTML = fixtures.map(renderMatchCard).join('');
                 matchesContainer.style.display = 'grid';
                 statsSection.style.display = 'block';
 
-                // Calcola statistiche
-                calculateStats(matches);
+                // Statistiche
+                calculateStats(fixtures);
 
                 // Timestamp
                 const now = new Date();
@@ -836,23 +843,39 @@
 
             } catch (error) {
                 loadingEl.style.display = 'none';
-                apiNotice.className = 'api-notice error';
-                apiNotice.textContent = `❌ Errore: ${error.message}`;
-                apiNotice.style.display = 'block';
 
-                errorContainer.innerHTML = `
-                    <div class="error-message">
-                        <h3>⚠️ Errore nel caricamento</h3>
-                        <p><strong>Dettagli:</strong> ${error.message}</p>
-                        <p>Le API pubbliche potrebbero essere temporaneamente non disponibili.</p>
-                        <p><small>Ricarica la pagina per riprovare.</small></p>
-                    </div>
-                `;
+                if (error.message === 'API_KEY_NOT_CONFIGURED') {
+                    setupNotice.style.display = 'block';
+                    apiNotice.className = 'api-notice error';
+                    apiNotice.textContent = '⚠️ API Key non configurata! Segui le istruzioni sopra.';
+                    apiNotice.style.display = 'block';
+                } else if (error.message === 'API_KEY_INVALID') {
+                    apiNotice.className = 'api-notice error';
+                    apiNotice.textContent = '❌ API Key non valida! Verifica la tua chiave.';
+                    apiNotice.style.display = 'block';
+                    errorContainer.innerHTML = `
+                        <div class="error-message">
+                            <h3>⚠️ API Key Non Valida</h3>
+                            <p>La chiave API inserita non è corretta o è scaduta.</p>
+                            <p>Controlla di aver copiato correttamente la chiave da RapidAPI.</p>
+                        </div>
+                    `;
+                } else {
+                    apiNotice.className = 'api-notice error';
+                    apiNotice.textContent = `❌ Errore: ${error.message}`;
+                    apiNotice.style.display = 'block';
+                    errorContainer.innerHTML = `
+                        <div class="error-message">
+                            <h3>⚠️ Errore nel Caricamento</h3>
+                            <p><strong>Dettaglio:</strong> ${error.message}</p>
+                            <p>Verifica la connessione internet e riprova.</p>
+                        </div>
+                    `;
+                }
             }
         }
 
         // ===== INIZIALIZZA =====
-        // Carica immediatamente
         loadMatches();
 
         // Auto-refresh ogni 2 minuti
