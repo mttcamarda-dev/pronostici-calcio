@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pronostici Calcio - Today's Football Matches</title>
+    <title>Pronostici Calcio - Today's Matches & Predictions</title>
 
     <style>
         /* Global Styles */
@@ -30,7 +30,7 @@
         header {
             text-align: center;
             color: white;
-            margin-bottom: 40px;
+            margin-bottom: 30px;
         }
 
         header h1 {
@@ -42,21 +42,67 @@
         header p {
             font-size: 1.2em;
             opacity: 0.9;
+            margin-bottom: 5px;
+        }
+
+        .last-updated {
+            font-size: 0.9em;
+            opacity: 0.8;
+        }
+
+        /* API Key Notice */
+        .api-notice {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        .api-notice a {
+            color: #fff;
+            font-weight: bold;
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .loading {
+            text-align: center;
+            color: white;
+            font-size: 1.2em;
+            padding: 40px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-top: 4px solid white;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
 
         /* Matches Grid */
         .matches-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            gap: 20px;
+            margin-bottom: 30px;
         }
 
         /* Match Card */
         .match-card {
             background: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
         }
@@ -73,14 +119,14 @@
             color: white;
             padding: 5px 12px;
             border-radius: 20px;
-            font-size: 0.85em;
+            font-size: 0.8em;
             font-weight: bold;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         /* Match Time */
         .match-time {
-            font-size: 1.1em;
+            font-size: 1em;
             color: #e74c3c;
             font-weight: bold;
             margin-bottom: 15px;
@@ -92,6 +138,7 @@
             align-items: center;
             justify-content: space-between;
             margin-bottom: 15px;
+            padding: 10px 0;
         }
 
         .team {
@@ -100,97 +147,194 @@
         }
 
         .team-name {
-            font-size: 1.1em;
+            font-size: 1em;
             font-weight: bold;
             color: #2c3e50;
-            margin-bottom: 5px;
-        }
-
-        .team-logo {
-            font-size: 2.5em;
-            margin-bottom: 5px;
         }
 
         .vs {
-            font-size: 1.5em;
+            font-size: 1.2em;
             font-weight: bold;
             color: #95a5a6;
-            margin: 0 15px;
+            margin: 0 10px;
         }
 
-        /* Match Details */
-        .match-details {
-            border-top: 1px solid #ecf0f1;
-            padding-top: 15px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9em;
+        /* Odds Section */
+        .odds-section {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+        }
+
+        .odds-title {
+            font-size: 0.85em;
             color: #7f8c8d;
+            margin-bottom: 8px;
+            font-weight: 600;
         }
 
-        .detail-item {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+        .odds-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+        }
+
+        .odd-item {
+            background: white;
+            padding: 8px;
+            border-radius: 6px;
+            text-align: center;
+            border: 2px solid #ecf0f1;
+        }
+
+        .odd-label {
+            font-size: 0.75em;
+            color: #7f8c8d;
+            margin-bottom: 4px;
+        }
+
+        .odd-value {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Prediction Badge */
+        .prediction {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .prediction-label {
+            font-size: 0.8em;
+            opacity: 0.9;
+            margin-bottom: 3px;
+        }
+
+        .prediction-value {
+            font-size: 1.1em;
+        }
+
+        .prediction.draw {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+        }
+
+        .prediction.away {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+        }
+
+        /* Match Status */
+        .match-status {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.75em;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .match-status.scheduled {
+            background: #3498db;
+            color: white;
+        }
+
+        .match-status.live {
+            background: #e74c3c;
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         /* Stats Section */
         .stats-section {
             background: white;
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            margin-top: 40px;
+            margin-top: 30px;
         }
 
         .stats-section h2 {
             color: #2c3e50;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
             text-align: center;
+            font-size: 1.5em;
         }
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
         }
 
         .stat-card {
             text-align: center;
-            padding: 20px;
+            padding: 15px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border-radius: 10px;
             color: white;
         }
 
         .stat-number {
-            font-size: 2.5em;
+            font-size: 2em;
             font-weight: bold;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
         }
 
         .stat-label {
-            font-size: 1em;
+            font-size: 0.9em;
             opacity: 0.9;
         }
 
         /* Responsive Design */
         @media (max-width: 768px) {
             header h1 {
-                font-size: 2em;
+                font-size: 1.8em;
             }
 
             .matches-grid {
                 grid-template-columns: 1fr;
             }
 
-            .teams {
-                flex-direction: column;
+            .odds-grid {
+                grid-template-columns: repeat(3, 1fr);
+                gap: 6px;
             }
 
-            .vs {
-                margin: 10px 0;
+            .odd-item {
+                padding: 6px;
             }
+
+            .odd-value {
+                font-size: 1em;
+            }
+        }
+
+        /* Error Message */
+        .error-message {
+            background: rgba(231, 76, 60, 0.9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .no-matches {
+            background: white;
+            padding: 40px;
+            border-radius: 15px;
+            text-align: center;
+            color: #7f8c8d;
         }
     </style>
 </head>
@@ -198,15 +342,28 @@
     <div class="container">
         <header>
             <h1>⚽ Pronostici Calcio</h1>
-            <p>Today's Top Football Matches</p>
+            <p id="header-date">Today's Matches & Predictions</p>
+            <p class="last-updated" id="last-updated">Loading...</p>
         </header>
 
-        <div id="matches-container" class="matches-grid">
+        <div id="api-notice" class="api-notice" style="display: none;">
+            📢 Using demo data. Get real live data with a free API key from
+            <a href="https://www.football-data.org/client/register" target="_blank">football-data.org</a>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading today's matches...</p>
+        </div>
+
+        <div id="matches-container" class="matches-grid" style="display: none;">
             <!-- Matches will be dynamically inserted here -->
         </div>
 
-        <div class="stats-section">
-            <h2>Today's Match Statistics</h2>
+        <div id="error-container"></div>
+
+        <div class="stats-section" id="stats-section" style="display: none;">
+            <h2>Today's Statistics</h2>
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="total-matches">0</div>
@@ -214,200 +371,341 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-number" id="total-leagues">0</div>
-                    <div class="stat-label">Leagues</div>
+                    <div class="stat-label">Competitions</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number" id="total-teams">0</div>
-                    <div class="stat-label">Teams Playing</div>
+                    <div class="stat-number" id="home-wins">0</div>
+                    <div class="stat-label">Home Wins Predicted</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="draws">0</div>
+                    <div class="stat-label">Draws Predicted</div>
                 </div>
             </div>
         </div>
     </div>
 
     <script>
-        // Fake football matches data
-        const matches = [
-            {
-                homeTeam: "Manchester United",
-                awayTeam: "Liverpool",
-                homeEmoji: "🔴",
-                awayEmoji: "🔴",
-                time: "15:00",
-                league: "Premier League",
-                stadium: "Old Trafford",
-                referee: "Michael Oliver"
-            },
-            {
-                homeTeam: "Real Madrid",
-                awayTeam: "Barcelona",
-                homeEmoji: "⚪",
-                awayEmoji: "🔵",
-                time: "18:30",
-                league: "La Liga",
-                stadium: "Santiago Bernabéu",
-                referee: "Antonio Mateu"
-            },
-            {
-                homeTeam: "Bayern Munich",
-                awayTeam: "Borussia Dortmund",
-                homeEmoji: "🔴",
-                awayEmoji: "🟡",
-                time: "20:00",
-                league: "Bundesliga",
-                stadium: "Allianz Arena",
-                referee: "Felix Brych"
-            },
-            {
-                homeTeam: "Juventus",
-                awayTeam: "AC Milan",
-                homeEmoji: "⚫",
-                awayEmoji: "🔴",
-                time: "19:45",
-                league: "Serie A",
-                stadium: "Allianz Stadium",
-                referee: "Daniele Orsato"
-            },
-            {
-                homeTeam: "Paris Saint-Germain",
-                awayTeam: "Marseille",
-                homeEmoji: "🔵",
-                awayEmoji: "⚪",
-                time: "21:00",
-                league: "Ligue 1",
-                stadium: "Parc des Princes",
-                referee: "Clément Turpin"
-            },
-            {
-                homeTeam: "Chelsea",
-                awayTeam: "Arsenal",
-                homeEmoji: "🔵",
-                awayEmoji: "🔴",
-                time: "16:30",
-                league: "Premier League",
-                stadium: "Stamford Bridge",
-                referee: "Anthony Taylor"
-            },
-            {
-                homeTeam: "Atletico Madrid",
-                awayTeam: "Sevilla",
-                homeEmoji: "🔴",
-                awayEmoji: "⚪",
-                time: "17:00",
-                league: "La Liga",
-                stadium: "Wanda Metropolitano",
-                referee: "José Sánchez"
-            },
-            {
-                homeTeam: "Inter Milan",
-                awayTeam: "Napoli",
-                homeEmoji: "🔵",
-                awayEmoji: "🔵",
-                time: "20:45",
-                league: "Serie A",
-                stadium: "San Siro",
-                referee: "Davide Massa"
-            },
-            {
-                homeTeam: "RB Leipzig",
-                awayTeam: "Bayer Leverkusen",
-                homeEmoji: "🔴",
-                awayEmoji: "🔴",
-                time: "18:30",
-                league: "Bundesliga",
-                stadium: "Red Bull Arena",
-                referee: "Tobias Stieler"
-            },
-            {
-                homeTeam: "Lyon",
-                awayTeam: "Monaco",
-                homeEmoji: "⚪",
-                awayEmoji: "🔴",
-                time: "19:00",
-                league: "Ligue 1",
-                stadium: "Groupama Stadium",
-                referee: "François Letexier"
-            },
-            {
-                homeTeam: "Tottenham",
-                awayTeam: "Manchester City",
-                homeEmoji: "⚪",
-                awayEmoji: "🔵",
-                time: "17:30",
-                league: "Premier League",
-                stadium: "Tottenham Hotspur Stadium",
-                referee: "Paul Tierney"
-            },
-            {
-                homeTeam: "Valencia",
-                awayTeam: "Real Betis",
-                homeEmoji: "⚪",
-                awayEmoji: "🟢",
-                time: "19:30",
-                league: "La Liga",
-                stadium: "Mestalla",
-                referee: "Jesús Gil"
+        // Configuration
+        const CONFIG = {
+            // Add your free API key from https://www.football-data.org/client/register
+            API_KEY: '', // Leave empty to use demo data
+            API_BASE_URL: 'https://api.football-data.org/v4',
+            // Major European competition IDs
+            COMPETITIONS: [
+                { id: 'PL', name: 'Premier League' },
+                { id: 'PD', name: 'La Liga' },
+                { id: 'BL1', name: 'Bundesliga' },
+                { id: 'SA', name: 'Serie A' },
+                { id: 'FL1', name: 'Ligue 1' },
+                { id: 'CL', name: 'Champions League' }
+            ]
+        };
+
+        // Get today's date in YYYY-MM-DD format
+        function getTodayDate() {
+            const today = new Date();
+            return today.toISOString().split('T')[0];
+        }
+
+        // Format time from UTC to local
+        function formatMatchTime(utcDateString) {
+            const date = new Date(utcDateString);
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
+            });
+        }
+
+        // Format date for display
+        function formatDate(date) {
+            return new Date(date).toLocaleDateString('en-US', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            });
+        }
+
+        // Generate realistic odds based on team names and competition
+        function generateOdds(homeTeam, awayTeam, competition) {
+            // Simple algorithm based on team name hash and competition
+            const homeStrength = (homeTeam.length * 7 + competition.length * 3) % 20 + 45;
+            const awayStrength = (awayTeam.length * 5 + competition.length * 4) % 20 + 45;
+
+            const total = homeStrength + awayStrength;
+            const homeProbability = homeStrength / total;
+            const awayProbability = awayStrength / total;
+            const drawProbability = 0.25; // Base draw probability
+
+            // Convert probabilities to odds (with bookmaker margin)
+            const margin = 1.08; // 8% bookmaker margin
+            const homeOdds = (margin / (homeProbability * 0.85)).toFixed(2);
+            const drawOdds = (margin / drawProbability).toFixed(2);
+            const awayOdds = (margin / (awayProbability * 0.85)).toFixed(2);
+
+            return {
+                home: homeOdds,
+                draw: drawOdds,
+                away: awayOdds
+            };
+        }
+
+        // Make prediction based on odds
+        function makePrediction(odds) {
+            const homeOdd = parseFloat(odds.home);
+            const drawOdd = parseFloat(odds.draw);
+            const awayOdd = parseFloat(odds.away);
+
+            if (homeOdd < drawOdd && homeOdd < awayOdd) {
+                return { result: 'HOME WIN', class: 'home' };
+            } else if (awayOdd < homeOdd && awayOdd < drawOdd) {
+                return { result: 'AWAY WIN', class: 'away' };
+            } else {
+                return { result: 'DRAW', class: 'draw' };
             }
-        ];
+        }
 
-        // Get the container element
-        const matchesContainer = document.getElementById('matches-container');
+        // Fetch matches from API
+        async function fetchRealMatches() {
+            if (!CONFIG.API_KEY) {
+                return null;
+            }
 
-        // Function to render all matches
-        function renderMatches() {
-            matches.forEach(match => {
-                const matchCard = `
-                    <div class="match-card">
-                        <span class="league-badge">${match.league}</span>
-                        <div class="match-time">⏰ ${match.time}</div>
-                        <div class="teams">
-                            <div class="team">
-                                <div class="team-logo">${match.homeEmoji}</div>
-                                <div class="team-name">${match.homeTeam}</div>
-                            </div>
-                            <div class="vs">VS</div>
-                            <div class="team">
-                                <div class="team-logo">${match.awayEmoji}</div>
-                                <div class="team-name">${match.awayTeam}</div>
-                            </div>
+            try {
+                const today = getTodayDate();
+                const response = await fetch(
+                    `${CONFIG.API_BASE_URL}/matches?dateFrom=${today}&dateTo=${today}`,
+                    {
+                        headers: {
+                            'X-Auth-Token': CONFIG.API_KEY
+                        }
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error('API request failed');
+                }
+
+                const data = await response.json();
+                return data.matches || [];
+            } catch (error) {
+                console.error('Error fetching real matches:', error);
+                return null;
+            }
+        }
+
+        // Generate demo data for today
+        function generateDemoMatches() {
+            const today = new Date();
+            const baseTime = new Date(today.setHours(15, 0, 0, 0));
+
+            const demoMatches = [
+                {
+                    competition: { name: 'Premier League', code: 'PL' },
+                    homeTeam: { name: 'Manchester United', shortName: 'Man United' },
+                    awayTeam: { name: 'Liverpool', shortName: 'Liverpool' },
+                    utcDate: new Date(baseTime.getTime()).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'Premier League', code: 'PL' },
+                    homeTeam: { name: 'Arsenal', shortName: 'Arsenal' },
+                    awayTeam: { name: 'Chelsea', shortName: 'Chelsea' },
+                    utcDate: new Date(baseTime.getTime() + 90 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'La Liga', code: 'PD' },
+                    homeTeam: { name: 'Real Madrid', shortName: 'Real Madrid' },
+                    awayTeam: { name: 'FC Barcelona', shortName: 'Barcelona' },
+                    utcDate: new Date(baseTime.getTime() + 210 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'Bundesliga', code: 'BL1' },
+                    homeTeam: { name: 'Bayern Munich', shortName: 'Bayern' },
+                    awayTeam: { name: 'Borussia Dortmund', shortName: 'Dortmund' },
+                    utcDate: new Date(baseTime.getTime() + 300 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'Serie A', code: 'SA' },
+                    homeTeam: { name: 'Juventus', shortName: 'Juventus' },
+                    awayTeam: { name: 'AC Milan', shortName: 'Milan' },
+                    utcDate: new Date(baseTime.getTime() + 285 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'Ligue 1', code: 'FL1' },
+                    homeTeam: { name: 'Paris Saint-Germain', shortName: 'PSG' },
+                    awayTeam: { name: 'Olympique Marseille', shortName: 'Marseille' },
+                    utcDate: new Date(baseTime.getTime() + 360 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'Premier League', code: 'PL' },
+                    homeTeam: { name: 'Manchester City', shortName: 'Man City' },
+                    awayTeam: { name: 'Tottenham Hotspur', shortName: 'Spurs' },
+                    utcDate: new Date(baseTime.getTime() + 150 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                },
+                {
+                    competition: { name: 'La Liga', code: 'PD' },
+                    homeTeam: { name: 'Atletico Madrid', shortName: 'Atletico' },
+                    awayTeam: { name: 'Sevilla FC', shortName: 'Sevilla' },
+                    utcDate: new Date(baseTime.getTime() + 240 * 60000).toISOString(),
+                    status: 'SCHEDULED'
+                }
+            ];
+
+            return demoMatches;
+        }
+
+        // Render a single match card
+        function renderMatchCard(match) {
+            const homeTeamName = match.homeTeam.shortName || match.homeTeam.name;
+            const awayTeamName = match.awayTeam.shortName || match.awayTeam.name;
+            const competitionName = match.competition.name;
+
+            const odds = generateOdds(homeTeamName, awayTeamName, competitionName);
+            const prediction = makePrediction(odds);
+            const matchTime = formatMatchTime(match.utcDate);
+
+            const statusClass = match.status === 'IN_PLAY' ? 'live' : 'scheduled';
+            const statusText = match.status === 'IN_PLAY' ? 'LIVE' : 'Scheduled';
+
+            return `
+                <div class="match-card">
+                    <div>
+                        <span class="league-badge">${competitionName}</span>
+                        <span class="match-status ${statusClass}">${statusText}</span>
+                    </div>
+                    <div class="match-time">⏰ ${matchTime}</div>
+
+                    <div class="teams">
+                        <div class="team">
+                            <div class="team-name">${homeTeamName}</div>
                         </div>
-                        <div class="match-details">
-                            <div class="detail-item">
-                                <span>🏟️</span>
-                                <span>${match.stadium}</span>
+                        <div class="vs">VS</div>
+                        <div class="team">
+                            <div class="team-name">${awayTeamName}</div>
+                        </div>
+                    </div>
+
+                    <div class="odds-section">
+                        <div class="odds-title">📊 Betting Odds</div>
+                        <div class="odds-grid">
+                            <div class="odd-item">
+                                <div class="odd-label">Home</div>
+                                <div class="odd-value">${odds.home}</div>
                             </div>
-                            <div class="detail-item">
-                                <span>👨‍⚖️</span>
-                                <span>${match.referee}</span>
+                            <div class="odd-item">
+                                <div class="odd-label">Draw</div>
+                                <div class="odd-value">${odds.draw}</div>
+                            </div>
+                            <div class="odd-item">
+                                <div class="odd-label">Away</div>
+                                <div class="odd-value">${odds.away}</div>
                             </div>
                         </div>
                     </div>
-                `;
-                matchesContainer.innerHTML += matchCard;
-            });
+
+                    <div class="prediction ${prediction.class}">
+                        <div class="prediction-label">🎯 Prediction</div>
+                        <div class="prediction-value">${prediction.result}</div>
+                    </div>
+                </div>
+            `;
         }
 
-        // Function to calculate and display statistics
-        function calculateStats() {
-            // Total matches
+        // Calculate and display statistics
+        function calculateStats(matches) {
+            const predictions = matches.map(match => {
+                const homeTeamName = match.homeTeam.shortName || match.homeTeam.name;
+                const awayTeamName = match.awayTeam.shortName || match.awayTeam.name;
+                const competitionName = match.competition.name;
+                const odds = generateOdds(homeTeamName, awayTeamName, competitionName);
+                return makePrediction(odds);
+            });
+
+            const homeWins = predictions.filter(p => p.result === 'HOME WIN').length;
+            const draws = predictions.filter(p => p.result === 'DRAW').length;
+            const uniqueCompetitions = new Set(matches.map(m => m.competition.name)).size;
+
             document.getElementById('total-matches').textContent = matches.length;
-
-            // Unique leagues
-            const uniqueLeagues = new Set(matches.map(match => match.league));
-            document.getElementById('total-leagues').textContent = uniqueLeagues.size;
-
-            // Total teams
-            const allTeams = [];
-            matches.forEach(match => {
-                allTeams.push(match.homeTeam);
-                allTeams.push(match.awayTeam);
-            });
-            const uniqueTeams = new Set(allTeams);
-            document.getElementById('total-teams').textContent = uniqueTeams.size;
+            document.getElementById('total-leagues').textContent = uniqueCompetitions;
+            document.getElementById('home-wins').textContent = homeWins;
+            document.getElementById('draws').textContent = draws;
         }
 
-        // Initialize the page
-        renderMatches();
-        calculateStats();
+        // Main function to load and display matches
+        async function loadMatches() {
+            const loadingEl = document.getElementById('loading');
+            const matchesContainer = document.getElementById('matches-container');
+            const statsSection = document.getElementById('stats-section');
+            const errorContainer = document.getElementById('error-container');
+            const apiNotice = document.getElementById('api-notice');
+            const headerDate = document.getElementById('header-date');
+            const lastUpdated = document.getElementById('last-updated');
+
+            try {
+                // Update header with today's date
+                headerDate.textContent = `Matches for ${formatDate(getTodayDate())}`;
+
+                // Try to fetch real matches
+                let matches = await fetchRealMatches();
+
+                // If no API key or API failed, use demo data
+                if (!matches) {
+                    matches = generateDemoMatches();
+                    apiNotice.style.display = 'block';
+                }
+
+                // Hide loading
+                loadingEl.style.display = 'none';
+
+                if (matches.length === 0) {
+                    matchesContainer.innerHTML = '<div class="no-matches">⚽ No matches scheduled for today. Check back tomorrow!</div>';
+                    matchesContainer.style.display = 'block';
+                    return;
+                }
+
+                // Render all matches
+                matchesContainer.innerHTML = '';
+                matches.forEach(match => {
+                    matchesContainer.innerHTML += renderMatchCard(match);
+                });
+
+                // Show matches and stats
+                matchesContainer.style.display = 'grid';
+                statsSection.style.display = 'block';
+
+                // Calculate statistics
+                calculateStats(matches);
+
+                // Update last updated time
+                const now = new Date();
+                lastUpdated.textContent = `Last updated: ${now.toLocaleTimeString()}`;
+
+            } catch (error) {
+                loadingEl.style.display = 'none';
+                errorContainer.innerHTML = `
+                    <div class="error-message">
+                        <h3>⚠️ Error Loading Matches</h3>
+                        <p>${error.message}</p>
+                        <p>Please try refreshing the page.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // Initialize the application
+        loadMatches();
+
+        // Auto-refresh every 5 minutes
+        setInterval(loadMatches, 5 * 60 * 1000);
     </script>
 </body>
 </html>
