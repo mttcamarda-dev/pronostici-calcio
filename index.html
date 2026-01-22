@@ -423,15 +423,30 @@
         </header>
 
         <div id="setup-notice" class="setup-notice" style="display: none;">
-            <h3>🔑 Configurazione API Gratuita</h3>
-            <ol>
-                <li>Vai su <strong>RapidAPI.com</strong> e crea un account gratuito</li>
-                <li>Cerca <strong>"API-Football"</strong> e sottoscrivi il piano <strong>FREE</strong> (100 richieste/giorno)</li>
-                <li>Copia la tua <strong>X-RapidAPI-Key</strong></li>
-                <li>Apri questo file HTML e inserisci la chiave alla <strong>riga 545</strong>: <code>API_KEY: 'TUA_CHIAVE_QUI'</code></li>
-                <li>Salva e ricarica la pagina</li>
-            </ol>
-            <p style="margin-top: 10px;"><strong>Piano gratuito include:</strong> Tutte le partite di oggi (campionati + Champions + Europa League + Conference League)</p>
+            <h3>🔑 Scegli la Fonte Dati</h3>
+
+            <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="margin: 0 0 10px 0; color: #667eea;">Opzione 1: API-Football (Consigliata)</h4>
+                <ol style="margin: 10px 0;">
+                    <li>Vai su <strong>RapidAPI.com</strong> e crea un account gratuito</li>
+                    <li>Cerca <strong>"API-Football"</strong> e sottoscrivi il piano <strong>FREE</strong> (100 richieste/giorno)</li>
+                    <li>Copia la tua <strong>X-RapidAPI-Key</strong></li>
+                    <li>Apri questo file HTML e inserisci la chiave (cerca <code>API_KEY</code>)</li>
+                    <li>Assicurati che <code>DATA_SOURCE: 'rapidapi'</code></li>
+                </ol>
+                <p style="margin: 5px 0 0 0;"><strong>✅ Include:</strong> Tutte le competizioni mondiali (Serie A, Premier League, Champions, Europa League, etc.)</p>
+            </div>
+
+            <div style="background: #fff; padding: 15px; border-radius: 10px;">
+                <h4 style="margin: 0 0 10px 0; color: #e74c3c;">Opzione 2: Backend Locale (Solo Champions/Europa)</h4>
+                <ol style="margin: 10px 0;">
+                    <li>Installa Python e dipendenze: <code>pip install -r requirements.txt</code></li>
+                    <li>Avvia il backend: <code>python backend_scraper.py</code></li>
+                    <li>Apri questo file HTML e imposta <code>DATA_SOURCE: 'local'</code></li>
+                    <li>Ricarica la pagina</li>
+                </ol>
+                <p style="margin: 5px 0 0 0;"><strong>⚠️ Include solo:</strong> Champions League ed Europa League</p>
+            </div>
         </div>
 
         <div id="api-notice" class="api-notice" style="display: none;"></div>
@@ -470,6 +485,12 @@
     <script>
         // ===== CONFIGURAZIONE API =====
         const API_CONFIG = {
+            // SCEGLI LA FONTE DATI:
+            // 'rapidapi' = API-Football (tutte le competizioni, richiede chiave API gratuita)
+            // 'local' = Backend locale FlashScore scraper (solo Champions/Europa League, no API key)
+            DATA_SOURCE: 'rapidapi', // ← CAMBIA IN 'local' PER USARE IL BACKEND LOCALE
+
+            // --- Configurazione API-Football (RapidAPI) ---
             // ⚠️ INSERISCI QUI LA TUA API KEY GRATUITA DA RAPIDAPI
             // Ottienila su: https://rapidapi.com/api-sports/api/api-football
             // Piano FREE: 100 richieste/giorno (sufficiente per uso personale)
@@ -477,6 +498,11 @@
 
             API_HOST: 'api-football-v1.p.rapidapi.com',
             API_BASE_URL: 'https://api-football-v1.p.rapidapi.com/v3',
+
+            // --- Configurazione Backend Locale ---
+            // Avvia prima: python backend_scraper.py
+            LOCAL_BACKEND_URL: 'http://localhost:5000',
+
             TIMEOUT: 15000
         };
 
@@ -524,6 +550,17 @@
 
         // ===== FETCH TUTTE LE PARTITE DI OGGI =====
         async function fetchTodayMatches() {
+            // Modalità backend locale (FlashScore scraper)
+            if (API_CONFIG.DATA_SOURCE === 'local') {
+                return await fetchFromLocalBackend();
+            }
+
+            // Modalità API-Football (RapidAPI) - default
+            return await fetchFromAPIFootball();
+        }
+
+        // ===== FETCH DA API-FOOTBALL (RAPIDAPI) =====
+        async function fetchFromAPIFootball() {
             if (!API_CONFIG.API_KEY) {
                 throw new Error('API_KEY_NOT_CONFIGURED');
             }
@@ -531,7 +568,7 @@
             const today = getTodayDate();
             const url = `${API_CONFIG.API_BASE_URL}/fixtures?date=${today}`;
 
-            console.log('Fetching all matches for:', today);
+            console.log('Fetching from API-Football for:', today);
 
             try {
                 const response = await fetchWithTimeout(url, {
@@ -550,7 +587,7 @@
                 }
 
                 const data = await response.json();
-                console.log('API Response:', data);
+                console.log('API-Football Response:', data);
 
                 if (!data.response || data.response.length === 0) {
                     return [];
@@ -558,7 +595,73 @@
 
                 return data.response;
             } catch (error) {
-                console.error('Fetch error:', error);
+                console.error('API-Football fetch error:', error);
+                throw error;
+            }
+        }
+
+        // ===== FETCH DA BACKEND LOCALE (FLASHSCORE SCRAPER) =====
+        async function fetchFromLocalBackend() {
+            const url = `${API_CONFIG.LOCAL_BACKEND_URL}/partite`;
+
+            console.log('Fetching from local backend:', url);
+
+            try {
+                const response = await fetchWithTimeout(url, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Backend error: ${response.status}. Assicurati che il backend sia attivo (python backend_scraper.py)`);
+                }
+
+                const data = await response.json();
+                console.log('Local backend response:', data);
+
+                if (!data.data || data.data.length === 0) {
+                    return [];
+                }
+
+                // Trasforma il formato del backend locale in formato compatibile con API-Football
+                return data.data.map(match => ({
+                    fixture: {
+                        id: `local-${Math.random().toString(36).substr(2, 9)}`,
+                        date: new Date().toISOString(),
+                        status: {
+                            short: match.stato_partita === 'Non iniziata' ? 'NS' : 'LIVE',
+                            long: match.stato_partita
+                        }
+                    },
+                    league: {
+                        name: match.competizione,
+                        country: 'Europe',
+                        logo: '',
+                        flag: '🇪🇺'
+                    },
+                    teams: {
+                        home: {
+                            name: match.squadra_casa,
+                            logo: ''
+                        },
+                        away: {
+                            name: match.squadra_trasferta,
+                            logo: ''
+                        }
+                    },
+                    goals: {
+                        home: null,
+                        away: null
+                    },
+                    score: {
+                        halftime: { home: null, away: null },
+                        fulltime: { home: null, away: null }
+                    }
+                }));
+            } catch (error) {
+                console.error('Local backend fetch error:', error);
                 throw error;
             }
         }
