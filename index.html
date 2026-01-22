@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pronostici Calcio - Today's Football Matches</title>
+
+    <style>
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header */
+        header {
+            text-align: center;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        /* Matches Grid */
+        .matches-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        /* Match Card */
+        .match-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .match-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        }
+
+        /* League Badge */
+        .league-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Match Time */
+        .match-time {
+            font-size: 1.1em;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        /* Teams Container */
+        .teams {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .team {
+            flex: 1;
+            text-align: center;
+        }
+
+        .team-name {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .team-logo {
+            font-size: 2.5em;
+            margin-bottom: 5px;
+        }
+
+        .vs {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #95a5a6;
+            margin: 0 15px;
+        }
+
+        /* Match Details */
+        .match-details {
+            border-top: 1px solid #ecf0f1;
+            padding-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9em;
+            color: #7f8c8d;
+        }
+
+        .detail-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Stats Section */
+        .stats-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            margin-top: 40px;
+        }
+
+        .stats-section h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            color: white;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            font-size: 1em;
+            opacity: 0.9;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 2em;
+            }
+
+            .matches-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .teams {
+                flex-direction: column;
+            }
+
+            .vs {
+                margin: 10px 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚽ Pronostici Calcio</h1>
+            <p>Today's Top Football Matches</p>
+        </header>
+
+        <div id="matches-container" class="matches-grid">
+            <!-- Matches will be dynamically inserted here -->
+        </div>
+
+        <div class="stats-section">
+            <h2>Today's Match Statistics</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number" id="total-matches">0</div>
+                    <div class="stat-label">Total Matches</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-leagues">0</div>
+                    <div class="stat-label">Leagues</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="total-teams">0</div>
+                    <div class="stat-label">Teams Playing</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Fake football matches data
+        const matches = [
+            {
+                homeTeam: "Manchester United",
+                awayTeam: "Liverpool",
+                homeEmoji: "🔴",
+                awayEmoji: "🔴",
+                time: "15:00",
+                league: "Premier League",
+                stadium: "Old Trafford",
+                referee: "Michael Oliver"
+            },
+            {
+                homeTeam: "Real Madrid",
+                awayTeam: "Barcelona",
+                homeEmoji: "⚪",
+                awayEmoji: "🔵",
+                time: "18:30",
+                league: "La Liga",
+                stadium: "Santiago Bernabéu",
+                referee: "Antonio Mateu"
+            },
+            {
+                homeTeam: "Bayern Munich",
+                awayTeam: "Borussia Dortmund",
+                homeEmoji: "🔴",
+                awayEmoji: "🟡",
+                time: "20:00",
+                league: "Bundesliga",
+                stadium: "Allianz Arena",
+                referee: "Felix Brych"
+            },
+            {
+                homeTeam: "Juventus",
+                awayTeam: "AC Milan",
+                homeEmoji: "⚫",
+                awayEmoji: "🔴",
+                time: "19:45",
+                league: "Serie A",
+                stadium: "Allianz Stadium",
+                referee: "Daniele Orsato"
+            },
+            {
+                homeTeam: "Paris Saint-Germain",
+                awayTeam: "Marseille",
+                homeEmoji: "🔵",
+                awayEmoji: "⚪",
+                time: "21:00",
+                league: "Ligue 1",
+                stadium: "Parc des Princes",
+                referee: "Clément Turpin"
+            },
+            {
+                homeTeam: "Chelsea",
+                awayTeam: "Arsenal",
+                homeEmoji: "🔵",
+                awayEmoji: "🔴",
+                time: "16:30",
+                league: "Premier League",
+                stadium: "Stamford Bridge",
+                referee: "Anthony Taylor"
+            },
+            {
+                homeTeam: "Atletico Madrid",
+                awayTeam: "Sevilla",
+                homeEmoji: "🔴",
+                awayEmoji: "⚪",
+                time: "17:00",
+                league: "La Liga",
+                stadium: "Wanda Metropolitano",
+                referee: "José Sánchez"
+            },
+            {
+                homeTeam: "Inter Milan",
+                awayTeam: "Napoli",
+                homeEmoji: "🔵",
+                awayEmoji: "🔵",
+                time: "20:45",
+                league: "Serie A",
+                stadium: "San Siro",
+                referee: "Davide Massa"
+            },
+            {
+                homeTeam: "RB Leipzig",
+                awayTeam: "Bayer Leverkusen",
+                homeEmoji: "🔴",
+                awayEmoji: "🔴",
+                time: "18:30",
+                league: "Bundesliga",
+                stadium: "Red Bull Arena",
+                referee: "Tobias Stieler"
+            },
+            {
+                homeTeam: "Lyon",
+                awayTeam: "Monaco",
+                homeEmoji: "⚪",
+                awayEmoji: "🔴",
+                time: "19:00",
+                league: "Ligue 1",
+                stadium: "Groupama Stadium",
+                referee: "François Letexier"
+            },
+            {
+                homeTeam: "Tottenham",
+                awayTeam: "Manchester City",
+                homeEmoji: "⚪",
+                awayEmoji: "🔵",
+                time: "17:30",
+                league: "Premier League",
+                stadium: "Tottenham Hotspur Stadium",
+                referee: "Paul Tierney"
+            },
+            {
+                homeTeam: "Valencia",
+                awayTeam: "Real Betis",
+                homeEmoji: "⚪",
+                awayEmoji: "🟢",
+                time: "19:30",
+                league: "La Liga",
+                stadium: "Mestalla",
+                referee: "Jesús Gil"
+            }
+        ];
+
+        // Get the container element
+        const matchesContainer = document.getElementById('matches-container');
+
+        // Function to render all matches
+        function renderMatches() {
+            matches.forEach(match => {
+                const matchCard = `
+                    <div class="match-card">
+                        <span class="league-badge">${match.league}</span>
+                        <div class="match-time">⏰ ${match.time}</div>
+                        <div class="teams">
+                            <div class="team">
+                                <div class="team-logo">${match.homeEmoji}</div>
+                                <div class="team-name">${match.homeTeam}</div>
+                            </div>
+                            <div class="vs">VS</div>
+                            <div class="team">
+                                <div class="team-logo">${match.awayEmoji}</div>
+                                <div class="team-name">${match.awayTeam}</div>
+                            </div>
+                        </div>
+                        <div class="match-details">
+                            <div class="detail-item">
+                                <span>🏟️</span>
+                                <span>${match.stadium}</span>
+                            </div>
+                            <div class="detail-item">
+                                <span>👨‍⚖️</span>
+                                <span>${match.referee}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                matchesContainer.innerHTML += matchCard;
+            });
+        }
+
+        // Function to calculate and display statistics
+        function calculateStats() {
+            // Total matches
+            document.getElementById('total-matches').textContent = matches.length;
+
+            // Unique leagues
+            const uniqueLeagues = new Set(matches.map(match => match.league));
+            document.getElementById('total-leagues').textContent = uniqueLeagues.size;
+
+            // Total teams
+            const allTeams = [];
+            matches.forEach(match => {
+                allTeams.push(match.homeTeam);
+                allTeams.push(match.awayTeam);
+            });
+            const uniqueTeams = new Set(allTeams);
+            document.getElementById('total-teams').textContent = uniqueTeams.size;
+        }
+
+        // Initialize the page
+        renderMatches();
+        calculateStats();
+    </script>
+</body>
+</html>
