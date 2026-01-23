@@ -425,20 +425,28 @@
         <div id="setup-notice" class="setup-notice" style="display: none;">
             <h3>🔑 Scegli la Fonte Dati</h3>
 
+            <div style="background: #2ecc71; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="margin: 0 0 10px 0; color: white;">⭐ Opzione 1: Football-Data.org (CONSIGLIATA - GIÀ ATTIVA)</h4>
+                <p style="margin: 10px 0 5px 0; font-weight: bold;">✅ GRATIS, NESSUNA API KEY RICHIESTA</p>
+                <p style="margin: 5px 0;"><strong>Include:</strong> Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Champions League, Europa League, Eredivisie, Primeira Liga</p>
+                <p style="margin: 5px 0; font-size: 0.9em;">🎯 <strong>Già configurato!</strong> Apri semplicemente questa pagina - funziona subito senza configurazione.</p>
+                <p style="margin: 5px 0; font-size: 0.85em; opacity: 0.9;">Opzionale: registrati su <a href="https://www.football-data.org/client/register" style="color: white; text-decoration: underline;">football-data.org</a> per più richieste/minuto</p>
+            </div>
+
             <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: #667eea;">Opzione 1: API-Football (Consigliata)</h4>
+                <h4 style="margin: 0 0 10px 0; color: #667eea;">Opzione 2: API-Football (Tutte le competizioni mondiali)</h4>
                 <ol style="margin: 10px 0;">
                     <li>Vai su <strong>RapidAPI.com</strong> e crea un account gratuito</li>
                     <li>Cerca <strong>"API-Football"</strong> e sottoscrivi il piano <strong>FREE</strong> (100 richieste/giorno)</li>
                     <li>Copia la tua <strong>X-RapidAPI-Key</strong></li>
                     <li>Apri questo file HTML e inserisci la chiave (cerca <code>API_KEY</code>)</li>
-                    <li>Assicurati che <code>DATA_SOURCE: 'rapidapi'</code></li>
+                    <li>Cambia <code>DATA_SOURCE: 'rapidapi'</code></li>
                 </ol>
-                <p style="margin: 5px 0 0 0;"><strong>✅ Include:</strong> Tutte le competizioni mondiali (Serie A, Premier League, Champions, Europa League, etc.)</p>
+                <p style="margin: 5px 0 0 0;"><strong>✅ Include:</strong> Tutte le competizioni mondiali (100+ campionati e coppe)</p>
             </div>
 
             <div style="background: #fff; padding: 15px; border-radius: 10px;">
-                <h4 style="margin: 0 0 10px 0; color: #e74c3c;">Opzione 2: Backend Locale (Solo Champions/Europa)</h4>
+                <h4 style="margin: 0 0 10px 0; color: #e74c3c;">Opzione 3: Backend Locale (Solo Champions/Europa)</h4>
                 <ol style="margin: 10px 0;">
                     <li>Installa Python e dipendenze: <code>pip install -r requirements.txt</code></li>
                     <li>Avvia il backend: <code>python backend_scraper.py</code></li>
@@ -486,9 +494,17 @@
         // ===== CONFIGURAZIONE API =====
         const API_CONFIG = {
             // SCEGLI LA FONTE DATI:
-            // 'rapidapi' = API-Football (tutte le competizioni, richiede chiave API gratuita)
+            // 'football-data' = Football-Data.org (TOP campionati europei, GRATIS, no API key richiesta) ⭐ CONSIGLIATO
+            // 'rapidapi' = API-Football (tutte le competizioni mondiali, richiede chiave API gratuita)
             // 'local' = Backend locale FlashScore scraper (solo Champions/Europa League, no API key)
-            DATA_SOURCE: 'rapidapi', // ← CAMBIA IN 'local' PER USARE IL BACKEND LOCALE
+            DATA_SOURCE: 'football-data', // ← PREDEFINITO: Football-Data.org (gratis, top campionati)
+
+            // --- Configurazione Football-Data.org (GRATIS) ---
+            // ✅ NESSUNA API KEY RICHIESTA per uso base
+            // Copre: Premier League, La Liga, Serie A, Bundesliga, Ligue 1, Champions League, Europa League
+            // Limite: 10 richieste/minuto (sufficiente)
+            FOOTBALL_DATA_URL: 'https://api.football-data.org/v4',
+            FOOTBALL_DATA_KEY: '', // Opzionale: per più richieste vai su https://www.football-data.org/client/register
 
             // --- Configurazione API-Football (RapidAPI) ---
             // ⚠️ INSERISCI QUI LA TUA API KEY GRATUITA DA RAPIDAPI
@@ -550,12 +566,17 @@
 
         // ===== FETCH TUTTE LE PARTITE DI OGGI =====
         async function fetchTodayMatches() {
+            // Modalità Football-Data.org (GRATIS, top campionati europei)
+            if (API_CONFIG.DATA_SOURCE === 'football-data') {
+                return await fetchFromFootballData();
+            }
+
             // Modalità backend locale (FlashScore scraper)
             if (API_CONFIG.DATA_SOURCE === 'local') {
                 return await fetchFromLocalBackend();
             }
 
-            // Modalità API-Football (RapidAPI) - default
+            // Modalità API-Football (RapidAPI)
             return await fetchFromAPIFootball();
         }
 
@@ -598,6 +619,121 @@
                 console.error('API-Football fetch error:', error);
                 throw error;
             }
+        }
+
+        // ===== FETCH DA FOOTBALL-DATA.ORG (GRATIS, TOP CAMPIONATI) =====
+        async function fetchFromFootballData() {
+            const today = getTodayDate();
+            const url = `${API_CONFIG.FOOTBALL_DATA_URL}/matches?dateFrom=${today}&dateTo=${today}`;
+
+            console.log('Fetching from Football-Data.org for:', today);
+
+            try {
+                const headers = {
+                    'Content-Type': 'application/json'
+                };
+
+                // Aggiungi API key se fornita (opzionale)
+                if (API_CONFIG.FOOTBALL_DATA_KEY) {
+                    headers['X-Auth-Token'] = API_CONFIG.FOOTBALL_DATA_KEY;
+                }
+
+                const response = await fetchWithTimeout(url, {
+                    method: 'GET',
+                    headers: headers
+                });
+
+                if (!response.ok) {
+                    if (response.status === 429) {
+                        throw new Error('Limite richieste superato. Riprova tra qualche minuto.');
+                    }
+                    throw new Error(`Football-Data.org error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                console.log('Football-Data.org Response:', data);
+
+                if (!data.matches || data.matches.length === 0) {
+                    return [];
+                }
+
+                // Trasforma il formato Football-Data.org in formato compatibile con API-Football
+                return data.matches.map(match => {
+                    // Mappa gli stati
+                    const statusMap = {
+                        'SCHEDULED': 'NS',
+                        'TIMED': 'NS',
+                        'IN_PLAY': 'LIVE',
+                        'PAUSED': 'HT',
+                        'FINISHED': 'FT',
+                        'POSTPONED': 'PST',
+                        'CANCELLED': 'CANC',
+                        'SUSPENDED': 'SUSP'
+                    };
+
+                    const status = statusMap[match.status] || 'NS';
+
+                    return {
+                        fixture: {
+                            id: match.id,
+                            date: match.utcDate,
+                            status: {
+                                short: status,
+                                long: match.status
+                            }
+                        },
+                        league: {
+                            name: match.competition.name,
+                            country: match.competition.area?.name || match.area?.name || 'International',
+                            logo: match.competition.emblem || '',
+                            flag: getCountryFlag(match.competition.area?.name || match.area?.name)
+                        },
+                        teams: {
+                            home: {
+                                name: match.homeTeam.name,
+                                logo: match.homeTeam.crest || ''
+                            },
+                            away: {
+                                name: match.awayTeam.name,
+                                logo: match.awayTeam.crest || ''
+                            }
+                        },
+                        goals: {
+                            home: match.score?.fullTime?.home,
+                            away: match.score?.fullTime?.away
+                        },
+                        score: {
+                            halftime: {
+                                home: match.score?.halfTime?.home,
+                                away: match.score?.halfTime?.away
+                            },
+                            fulltime: {
+                                home: match.score?.fullTime?.home,
+                                away: match.score?.fullTime?.away
+                            }
+                        }
+                    };
+                });
+            } catch (error) {
+                console.error('Football-Data.org fetch error:', error);
+                throw error;
+            }
+        }
+
+        // Helper: Ottieni emoji bandiera da nome paese
+        function getCountryFlag(countryName) {
+            const flags = {
+                'England': '🏴󠁧󠁢󠁥󠁮󠁧󠁿',
+                'Spain': '🇪🇸',
+                'Germany': '🇩🇪',
+                'Italy': '🇮🇹',
+                'France': '🇫🇷',
+                'Portugal': '🇵🇹',
+                'Netherlands': '🇳🇱',
+                'Europe': '🇪🇺',
+                'International': '🌍'
+            };
+            return flags[countryName] || '⚽';
         }
 
         // ===== FETCH DA BACKEND LOCALE (FLASHSCORE SCRAPER) =====
