@@ -422,52 +422,40 @@
             <p class="last-updated" id="last-updated"></p>
         </header>
 
-        <div id="setup-notice" class="setup-notice" style="display: none;">
-            <h3>🔑 Vuoi Dati REALI? Configura un'API</h3>
+        <div id="setup-notice" class="setup-notice" style="display: block;">
+            <h3>⚽ Avvia il Backend per Partite REALI</h3>
 
-            <div style="background: #3498db; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: white;">ℹ️ Stai Usando Dati DEMO</h4>
-                <p style="margin: 10px 0 5px 0;">Le partite mostrate sono <strong>esempi realistici</strong> per scopo dimostrativo.</p>
-                <p style="margin: 5px 0;">Per vedere partite <strong>REALI di oggi</strong>, scegli una delle opzioni sotto:</p>
+            <div style="background: #e74c3c; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="margin: 0 0 10px 0; color: white;">⚠️ Backend Non Attivo</h4>
+                <p style="margin: 10px 0 5px 0;">Per vedere le partite <strong>REALI di oggi</strong> dai top campionati, devi avviare il backend locale.</p>
             </div>
 
-            <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: #667eea;">⭐ Opzione 1: API-Football (CONSIGLIATA)</h4>
-                <p style="margin: 5px 0; font-weight: bold;">✅ Tutte le competizioni mondiali (100+ leghe)</p>
+            <div style="background: #2ecc71; color: white; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
+                <h4 style="margin: 0 0 10px 0; color: white;">⭐ Modalità PREDEFINITA: Backend Locale</h4>
+                <p style="margin: 10px 0 5px 0; font-weight: bold;">✅ Partite REALI dei TOP 5 campionati europei (NESSUNA API key richiesta)</p>
+                <p style="margin: 5px 0;"><strong>Include:</strong> Serie A 🇮🇹 • Premier League 🏴󠁧󠁢󠁥󠁮󠁧󠁿 • La Liga 🇪🇸 • Bundesliga 🇩🇪 • Ligue 1 🇫🇷</p>
+                <p style="margin: 5px 0;"><strong>Esclude:</strong> Coppe europee (Champions, Europa, Conference)</p>
+
+                <h5 style="margin: 15px 0 10px 0; color: white;">Come avviare (2 comandi):</h5>
                 <ol style="margin: 10px 0;">
-                    <li>Vai su <a href="https://rapidapi.com/api-sports/api/api-football" target="_blank"><strong>RapidAPI.com</strong></a> e crea account gratuito</li>
-                    <li>Cerca <strong>"API-Football"</strong> e sottoscrivi il piano <strong>FREE</strong> (100 richieste/giorno)</li>
-                    <li>Copia la tua <strong>X-RapidAPI-Key</strong></li>
-                    <li>Apri questo file HTML e modifica:
-                        <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px; margin: 5px 0;">DATA_SOURCE: 'rapidapi',
-API_KEY: 'TUA_CHIAVE_QUI',</pre>
+                    <li><strong>Installa dipendenze</strong> (solo la prima volta):
+                        <pre style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin: 5px 0; color: white;">pip install -r requirements.txt</pre>
                     </li>
-                    <li>Salva e ricarica la pagina</li>
-                </ol>
-            </div>
-
-            <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px;">
-                <h4 style="margin: 0 0 10px 0; color: #2ecc71;">Opzione 2: Football-Data.org</h4>
-                <p style="margin: 5px 0; font-weight: bold;">✅ Top campionati europei (Serie A, Premier, Champions, etc.)</p>
-                <ol style="margin: 10px 0;">
-                    <li>Vai su <a href="https://www.football-data.org/client/register" target="_blank"><strong>Football-Data.org</strong></a> e registrati gratis</li>
-                    <li>Copia la tua API key</li>
-                    <li>Apri questo file HTML e modifica:
-                        <pre style="background: #f4f4f4; padding: 10px; border-radius: 5px; margin: 5px 0;">DATA_SOURCE: 'football-data',
-FOOTBALL_DATA_KEY: 'TUA_CHIAVE_QUI',</pre>
+                    <li><strong>Avvia il backend</strong>:
+                        <pre style="background: rgba(0,0,0,0.2); padding: 10px; border-radius: 5px; margin: 5px 0; color: white;">python backend_scraper.py</pre>
                     </li>
-                    <li>Salva e ricarica la pagina</li>
+                    <li><strong>Apri index.html</strong> in questo browser</li>
                 </ol>
+                <p style="margin: 10px 0 0 0; font-size: 0.9em; opacity: 0.9;">Il backend rimarrà attivo fino a quando lo tieni aperto. Ricarica questa pagina dopo averlo avviato.</p>
             </div>
 
-            <div style="background: #fff; padding: 15px; border-radius: 10px;">
-                <h4 style="margin: 0 0 10px 0; color: #e74c3c;">Opzione 3: Backend Locale (Solo educazione)</h4>
-                <p style="margin: 5px 0; font-weight: bold;">⚠️ Solo Champions League ed Europa League</p>
-                <ol style="margin: 10px 0;">
-                    <li>Installa Python: <code>pip install -r requirements.txt</code></li>
-                    <li>Avvia backend: <code>python backend_scraper.py</code></li>
-                    <li>Modifica: <code>DATA_SOURCE: 'local'</code></li>
-                    <li>Ricarica la pagina</li>
+            <div style="background: #fff; padding: 15px; border-radius: 10px; margin-bottom: 15px; border: 2px solid #ddd;">
+                <h4 style="margin: 0 0 10px 0; color: #667eea;">Alternativa: API-Football (tutte le competizioni)</h4>
+                <p style="margin: 5px 0;">Se preferisci usare un'API ufficiale con <strong>tutte le competizioni mondiali</strong> (coppe incluse):</p>
+                <ol style="margin: 10px 0; font-size: 0.9em;">
+                    <li>Vai su <a href="https://rapidapi.com/api-sports/api/api-football" target="_blank">RapidAPI.com</a> → Crea account → Piano FREE</li>
+                    <li>Copia X-RapidAPI-Key</li>
+                    <li>Modifica in index.html: <code>DATA_SOURCE: 'rapidapi'</code> e <code>API_KEY: 'TUA_CHIAVE'</code></li>
                 </ol>
             </div>
         </div>
@@ -509,11 +497,11 @@ FOOTBALL_DATA_KEY: 'TUA_CHIAVE_QUI',</pre>
         // ===== CONFIGURAZIONE API =====
         const API_CONFIG = {
             // SCEGLI LA FONTE DATI:
-            // 'demo' = Dati demo realistici (funziona SUBITO, nessuna configurazione) ⭐ PREDEFINITO
+            // 'local' = Backend locale (TOP campionati REALI: Serie A, Premier, Liga, Bundesliga, Ligue 1) ⭐ PREDEFINITO
             // 'rapidapi' = API-Football (tutte le competizioni mondiali, richiede chiave API gratuita)
             // 'football-data' = Football-Data.org (TOP campionati europei, richiede registrazione gratuita)
-            // 'local' = Backend locale FlashScore scraper (solo Champions/Europa League)
-            DATA_SOURCE: 'demo', // ← PREDEFINITO: Dati demo (funziona subito!)
+            // 'demo' = Dati demo realistici (solo per testing)
+            DATA_SOURCE: 'local', // ← PREDEFINITO: Backend locale (partite REALI di oggi)
 
             // --- Configurazione API-Football (RapidAPI) ---
             // Per dati REALI di tutte le competizioni mondiali
@@ -1295,14 +1283,21 @@ FOOTBALL_DATA_KEY: 'TUA_CHIAVE_QUI',</pre>
                 apiNotice.className = 'api-notice success';
                 const europeanCount = fixtures.filter(f => isEuropeanCup(f.league.name)).length;
 
-                // Messaggio diverso per dati demo vs dati reali
-                if (API_CONFIG.DATA_SOURCE === 'demo') {
+                // Messaggio diverso per backend locale vs API vs demo
+                if (API_CONFIG.DATA_SOURCE === 'local') {
+                    apiNotice.className = 'api-notice success';
+                    apiNotice.style.background = '#2ecc71';
+                    apiNotice.style.color = 'white';
+                    apiNotice.textContent = `✅ ${fixtures.length} partite REALI dei TOP campionati caricate`;
+                    // Nascondi setup notice se backend funziona
+                    setupNotice.style.display = 'none';
+                } else if (API_CONFIG.DATA_SOURCE === 'demo') {
                     apiNotice.className = 'api-notice';
                     apiNotice.style.background = '#3498db';
                     apiNotice.style.color = 'white';
                     apiNotice.innerHTML = `
                         ℹ️ Stai visualizzando <strong>DATI DEMO</strong> (${fixtures.length} partite esempio)
-                        <br><small>Per vedere partite REALI di oggi, <a href="#" onclick="document.getElementById('setup-notice').style.display='block'; return false;" style="color: white; text-decoration: underline;">configura un'API gratuita</a></small>
+                        <br><small>Per vedere partite REALI di oggi, <a href="#" onclick="document.getElementById('setup-notice').style.display='block'; return false;" style="color: white; text-decoration: underline;">avvia il backend</a></small>
                     `;
                 } else {
                     apiNotice.textContent = `✅ ${fixtures.length} partite REALI caricate (${europeanCount} coppe europee)`;
@@ -1326,7 +1321,25 @@ FOOTBALL_DATA_KEY: 'TUA_CHIAVE_QUI',</pre>
             } catch (error) {
                 loadingEl.style.display = 'none';
 
-                if (error.message === 'API_KEY_NOT_CONFIGURED') {
+                // Errore specifico per backend locale non attivo
+                if (API_CONFIG.DATA_SOURCE === 'local' && (error.message.includes('Failed to fetch') || error.message.includes('NetworkError') || error.message.includes('Backend error'))) {
+                    setupNotice.style.display = 'block';
+                    apiNotice.className = 'api-notice error';
+                    apiNotice.textContent = '❌ Backend locale non attivo! Avvia il server Python per vedere le partite REALI.';
+                    apiNotice.style.display = 'block';
+                    errorContainer.innerHTML = `
+                        <div class="error-message" style="background: #fff3cd; border: 2px solid #ffc107; color: #856404;">
+                            <h3 style="color: #856404;">⚠️ Backend Locale Non Attivo</h3>
+                            <p>Il backend non è in esecuzione. Per vedere le partite REALI dei top campionati:</p>
+                            <ol style="text-align: left; margin: 15px 0;">
+                                <li>Apri un terminale nella cartella del progetto</li>
+                                <li>Esegui: <code style="background: #f4f4f4; padding: 3px 6px; border-radius: 3px;">python backend_scraper.py</code></li>
+                                <li>Ricarica questa pagina</li>
+                            </ol>
+                            <p style="margin-top: 10px;"><strong>Oppure</strong> usa la modalità DEMO cambiando: <code style="background: #f4f4f4; padding: 3px 6px; border-radius: 3px;">DATA_SOURCE: 'demo'</code></p>
+                        </div>
+                    `;
+                } else if (error.message === 'API_KEY_NOT_CONFIGURED') {
                     setupNotice.style.display = 'block';
                     apiNotice.className = 'api-notice error';
                     apiNotice.textContent = '⚠️ API Key non configurata! Segui le istruzioni sopra.';

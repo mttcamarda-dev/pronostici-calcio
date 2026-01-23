@@ -1,14 +1,19 @@
 import requests
 from bs4 import BeautifulSoup
 from flask import Flask, jsonify
+from flask_cors import CORS
 from datetime import datetime
 
 app = Flask(__name__)
+CORS(app)  # Abilita CORS per permettere richieste dal browser
 
-# URL base dei risultati (Champions ed Europa League)
+# URL base dei TOP CAMPIONATI (NO coppe europee)
 FLASH_SCORE_URLS = {
-    "Champions League": "https://www.flashscore.com/football/champions-league/",
-    "Europa League": "https://www.flashscore.com/football/europa-league/"
+    "Serie A": "https://www.flashscore.com/football/italy/serie-a/",
+    "Premier League": "https://www.flashscore.com/football/england/premier-league/",
+    "La Liga": "https://www.flashscore.com/football/spain/laliga/",
+    "Bundesliga": "https://www.flashscore.com/football/germany/bundesliga/",
+    "Ligue 1": "https://www.flashscore.com/football/france/ligue-1/"
 }
 
 def get_todays_matches():
