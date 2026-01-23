@@ -1,0 +1,16 @@
+================================================
+    PRONOSTICI CALCIO
+================================================
+
+COME USARE:
+
+1. Apri il file:  index.html
+
+FATTO! Vedrai le partite di oggi con quote.
+
+
+================================================
+
+Il programma funziona subito, senza installare nulla.
+
+Le partite cambiano ogni giorno automaticamente.
