@@ -496,8 +496,8 @@
     <script>
         // ===== CONFIGURAZIONE API =====
         const API_CONFIG = {
-            // Modalità automatica: dati realistici con quote, funziona SEMPRE
-            DATA_SOURCE: 'smart-demo', // ← PREDEFINITO: Partite realistiche giornaliere (APRI E FUNZIONA)
+            // Backend locale con partite VERE da diretta.it e quote da goldbet
+            DATA_SOURCE: 'local', // ← PREDEFINITO: Partite REALI di oggi (richiede: python backend_scraper.py)
 
             // --- Configurazione API-Football (RapidAPI) ---
             // Per dati REALI di tutte le competizioni mondiali
@@ -1086,40 +1086,61 @@
                 }
 
                 // Trasforma il formato del backend locale in formato compatibile con API-Football
-                return data.data.map(match => ({
-                    fixture: {
-                        id: `local-${Math.random().toString(36).substr(2, 9)}`,
-                        date: new Date().toISOString(),
-                        status: {
-                            short: match.stato_partita === 'Non iniziata' ? 'NS' : 'LIVE',
-                            long: match.stato_partita
-                        }
-                    },
-                    league: {
-                        name: match.competizione,
-                        country: 'Europe',
-                        logo: '',
-                        flag: '🇪🇺'
-                    },
-                    teams: {
-                        home: {
-                            name: match.squadra_casa,
-                            logo: ''
+                return data.data.map(match => {
+                    // Determina bandiera in base al campionato
+                    let flag = '⚽';
+                    if (match.competizione.includes('Serie A') || match.competizione.includes('Italy')) flag = '🇮🇹';
+                    else if (match.competizione.includes('Premier') || match.competizione.includes('England')) flag = '🏴󠁧󠁢󠁥󠁮󠁧󠁿';
+                    else if (match.competizione.includes('Liga') || match.competizione.includes('Spain')) flag = '🇪🇸';
+                    else if (match.competizione.includes('Bundesliga') || match.competizione.includes('Germany')) flag = '🇩🇪';
+                    else if (match.competizione.includes('Ligue') || match.competizione.includes('France')) flag = '🇫🇷';
+
+                    // Parse orario
+                    const timeStr = match.orario || '00:00';
+                    const today = new Date().toISOString().split('T')[0];
+                    const dateTime = `${today}T${timeStr.padStart(5, '0')}:00Z`;
+
+                    return {
+                        fixture: {
+                            id: `local-${Math.random().toString(36).substr(2, 9)}`,
+                            date: dateTime,
+                            status: {
+                                short: match.stato_partita === 'Non iniziata' ? 'NS' : 'LIVE',
+                                long: match.stato_partita
+                            }
                         },
-                        away: {
-                            name: match.squadra_trasferta,
-                            logo: ''
-                        }
-                    },
-                    goals: {
-                        home: null,
-                        away: null
-                    },
-                    score: {
-                        halftime: { home: null, away: null },
-                        fulltime: { home: null, away: null }
-                    }
-                }));
+                        league: {
+                            name: match.competizione,
+                            country: 'Europe',
+                            logo: '',
+                            flag: flag
+                        },
+                        teams: {
+                            home: {
+                                name: match.squadra_casa,
+                                logo: ''
+                            },
+                            away: {
+                                name: match.squadra_trasferta,
+                                logo: ''
+                            }
+                        },
+                        goals: {
+                            home: null,
+                            away: null
+                        },
+                        score: {
+                            halftime: { home: null, away: null },
+                            fulltime: { home: null, away: null }
+                        },
+                        // Quote custom dal backend (diretta.it + goldbet)
+                        odds_custom: match.quote ? {
+                            home: match.quote['1'],
+                            draw: match.quote['X'],
+                            away: match.quote['2']
+                        } : null
+                    };
+                });
             } catch (error) {
                 console.error('Local backend fetch error:', error);
                 throw error;
@@ -1216,7 +1237,17 @@
         }
 
         // ===== GENERA QUOTE =====
-        function generateOdds(prediction) {
+        function generateOdds(prediction, customOdds = null) {
+            // Se abbiamo quote custom dal backend (goldbet), usale
+            if (customOdds) {
+                return {
+                    home: customOdds.home.toFixed(2),
+                    draw: customOdds.draw.toFixed(2),
+                    away: customOdds.away.toFixed(2)
+                };
+            }
+
+            // Altrimenti genera quote basate sul pronostico
             let homeOdds, drawOdds, awayOdds;
 
             if (prediction.class === 'home') {
@@ -1268,9 +1299,10 @@
             const showScore = fixture.goals.home !== null && fixture.goals.away !== null;
             const scoreDisplay = showScore ? `${fixture.goals.home} - ${fixture.goals.away}` : '';
 
-            // Pronostico
+            // Pronostico e quote
             const prediction = calculatePrediction(fixture);
-            const odds = statusClass !== 'finished' ? generateOdds(prediction) : null;
+            // Usa quote custom dal backend se disponibili (goldbet), altrimenti genera
+            const odds = statusClass !== 'finished' ? generateOdds(prediction, fixture.odds_custom) : null;
 
             return `
                 <div class="match-card">

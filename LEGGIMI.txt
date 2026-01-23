@@ -1,16 +1,38 @@
 ================================================
     PRONOSTICI CALCIO
+    Partite VERE di oggi con quote VERE
 ================================================
 
-COME USARE:
+COME USARE (2 PASSI):
 
-1. Apri il file:  index.html
+PASSO 1 - Avvia il backend (solo la prima volta installa):
 
-FATTO! Vedrai le partite di oggi con quote.
+    pip install -r requirements.txt
+
+Poi OGNI VOLTA che vuoi vedere le partite:
+
+    python backend_scraper.py
+
+Lascia il terminale aperto!
+
+
+PASSO 2 - Apri il programma:
+
+    Apri il file: index.html
+
+    (doppio click o trascina nel browser)
 
 
 ================================================
 
-Il programma funziona subito, senza installare nulla.
+FATTO! Vedrai le partite VERE di oggi con quote VERE.
 
-Le partite cambiano ogni giorno automaticamente.
+Fonte partite: diretta.it
+Fonte quote: goldbet
+
+Solo top campionati (NO coppe europee):
+- Serie A
+- Premier League
+- La Liga
+- Bundesliga
+- Ligue 1
