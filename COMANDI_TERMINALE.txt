@@ -1,0 +1,93 @@
+═══════════════════════════════════════════════════════════
+  ISTRUZIONI CORRETTE - RISOLTO ERRORE
+═══════════════════════════════════════════════════════════
+
+📍 POSIZIONE: Apri il terminale nella cartella del progetto
+
+
+══════════════════════════════════════════════════════════
+PASSO 1 - Crea ambiente virtuale (SOLO LA PRIMA VOLTA)
+══════════════════════════════════════════════════════════
+
+Scrivi:
+
+    python -m venv venv
+
+Premi INVIO. Aspetta 5-10 secondi.
+
+
+══════════════════════════════════════════════════════════
+PASSO 2 - Attiva ambiente virtuale
+══════════════════════════════════════════════════════════
+
+Su Linux/Mac scrivi:
+
+    source venv/bin/activate
+
+Su Windows scrivi:
+
+    venv\Scripts\activate
+
+Premi INVIO.
+
+Vedrai (venv) all'inizio della riga del terminale.
+
+
+══════════════════════════════════════════════════════════
+PASSO 3 - Installa dipendenze
+══════════════════════════════════════════════════════════
+
+Scrivi:
+
+    pip install -r requirements.txt
+
+Premi INVIO. Aspetta che finisca (10-20 secondi).
+
+
+══════════════════════════════════════════════════════════
+PASSO 4 - Avvia backend (OGNI VOLTA)
+══════════════════════════════════════════════════════════
+
+Scrivi:
+
+    python backend_scraper.py
+
+Premi INVIO.
+
+Vedrai:
+    🟢 BACKEND PRONOSTICI CALCIO AVVIATO!
+    📡 Fonte partite: diretta.it
+
+✅ LASCIA IL TERMINALE APERTO!
+
+
+══════════════════════════════════════════════════════════
+PASSO 5 - Apri programma
+══════════════════════════════════════════════════════════
+
+Apri index.html nel browser.
+
+
+══════════════════════════════════════════════════════════
+RIEPILOGO COMANDI (copia-incolla in ordine)
+══════════════════════════════════════════════════════════
+
+PRIMA VOLTA:
+    python -m venv venv
+    source venv/bin/activate
+    pip install -r requirements.txt
+
+OGNI VOLTA DOPO:
+    source venv/bin/activate
+    python backend_scraper.py
+    (poi apri index.html)
+
+
+══════════════════════════════════════════════════════════
+PER FERMARE
+══════════════════════════════════════════════════════════
+
+Premi: CTRL+C nel terminale
+
+
+═══════════════════════════════════════════════════════════
