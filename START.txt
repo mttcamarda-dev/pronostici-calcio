@@ -1,0 +1,42 @@
+===============================================
+    PRONOSTICI CALCIO - AVVIO RAPIDO
+===============================================
+
+PARTITE REALI DEI TOP CAMPIONATI OGGI
+(Serie A, Premier League, La Liga, Bundesliga, Ligue 1)
+
+
+PASSO 1 - INSTALLA DIPENDENZE (solo la prima volta)
+---------------------------------------------------
+Apri terminale e digita:
+
+    pip install -r requirements.txt
+
+
+PASSO 2 - AVVIA BACKEND
+---------------------------------------------------
+Nel terminale, digita:
+
+    python backend_scraper.py
+
+Vedrai:
+ * Running on http://127.0.0.1:5000
+
+LASCIA IL TERMINALE APERTO!
+
+
+PASSO 3 - APRI APPLICAZIONE
+---------------------------------------------------
+Apri il file:
+
+    index.html
+
+nel tuo browser (doppio click o trascina nel browser).
+
+
+FATTO! Vedrai le partite REALI di oggi.
+===============================================
+
+Per fermare: Premi Ctrl+C nel terminale.
+
+Leggi ISTRUZIONI_AVVIO.md per dettagli completi.
