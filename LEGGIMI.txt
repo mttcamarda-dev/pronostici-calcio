@@ -1,18 +1,20 @@
 ================================================
     PRONOSTICI CALCIO
+    Partite giornaliere con quote
 ================================================
 
 COME USARE:
 
-Apri il file: index.html
+1. Apri il file: index.html
 
 FATTO! Vedrai le partite di oggi con quote.
 
 
 ================================================
 
-Il programma funziona subito.
-Partite e quote cambiano automaticamente ogni giorno.
+✅ Funziona subito - ZERO installazioni
+✅ Partite diverse ogni giorno
+✅ Quote realistiche
 
 Campionati inclusi:
 - Serie A
@@ -20,3 +22,5 @@ Campionati inclusi:
 - La Liga
 - Bundesliga
 - Ligue 1
+
+Partite cambiano automaticamente ogni giorno della settimana.
