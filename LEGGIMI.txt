@@ -1,26 +1,62 @@
-================================================
-    PRONOSTICI CALCIO
-    Partite giornaliere con quote
-================================================
+╔═══════════════════════════════════════════════════════════════╗
+║  📊 PRONOSTICI CALCIO - PARTITE ULTRA-REALISTICHE            ║
+╚═══════════════════════════════════════════════════════════════╝
 
-COME USARE:
+🎯 SISTEMA ULTRA-REALISTICO:
+   • Squadre VERE (Serie A, Premier, La Liga, Bundesliga, Ligue 1)
+   • Statistiche VERE (forza, gol fatti, gol subiti)
+   • Quote REALISTICHE (calcolate da dati reali)
+   • Partite che CAMBIANO OGNI GIORNO
+   • Orari corretti per ogni giorno della settimana
 
-1. Apri il file: index.html
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-FATTO! Vedrai le partite di oggi con quote.
+📖 COME USARE:
 
+   1️⃣  Apri il TERMINALE nella cartella pronostici-calcio
 
-================================================
+   2️⃣  Scrivi questo comando:
 
-✅ Funziona subito - ZERO installazioni
-✅ Partite diverse ogni giorno
-✅ Quote realistiche
+       bash avvia.sh
 
-Campionati inclusi:
-- Serie A
-- Premier League
-- La Liga
-- Bundesliga
-- Ligue 1
+   3️⃣  Apri il file index.html nel browser
 
-Partite cambiano automaticamente ogni giorno della settimana.
+   4️⃣  GODITI le partite realistiche! ⚽
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✨ CARATTERISTICHE:
+
+   ✅ Partite diverse ogni giorno
+   ✅ Più partite nel weekend (Sabato/Domenica)
+   ✅ Anticipi il Venerdì
+   ✅ Posticipi il Lunedì
+   ✅ Infrasettimanali Mercoledì/Giovedì
+   ✅ Quote realistiche basate sulla forza delle squadre
+   ✅ Orari corretti per ogni campionato
+   ✅ ZERO registrazioni o API key
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚙️  DETTAGLI TECNICI:
+
+   Sistema: Python Flask + Generatore AI
+   Dati: Squadre e statistiche reali 2025/2026
+   Quote: Calcolate da algoritmo basato su:
+          - Forza squadra (0-100)
+          - Gol fatti medi
+          - Gol subiti medi
+          - Fattore campo (+3)
+   Aggiornamento: Automatico ogni giorno
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❓ PROBLEMI?
+
+   • Se il backend non parte: controlla di avere Python 3 installato
+   • Se vedi "Failed to fetch": riavvia il backend (bash avvia.sh)
+   • Per fermare il backend: premi CTRL+C nel terminale
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🎉 BUON DIVERTIMENTO!
