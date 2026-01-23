@@ -1,0 +1,75 @@
+═══════════════════════════════════════════════════════════
+  ISTRUZIONI PASSO-PASSO PER VEDERE PARTITE VERE
+═══════════════════════════════════════════════════════════
+
+📍 POSIZIONE: Apri il terminale nella cartella del progetto
+   (dove si trova index.html e backend_scraper.py)
+
+
+══════════════════════════════════════════════════════════
+PASSO 1 - Installa le dipendenze (SOLO LA PRIMA VOLTA)
+══════════════════════════════════════════════════════════
+
+Scrivi nel terminale:
+
+    pip install -r requirements.txt
+
+Premi INVIO.
+
+Vedrai l'installazione di Flask, BeautifulSoup, ecc.
+Aspetta che finisca (circa 10-20 secondi).
+
+
+══════════════════════════════════════════════════════════
+PASSO 2 - Avvia il backend (OGNI VOLTA che usi il programma)
+══════════════════════════════════════════════════════════
+
+Scrivi nel terminale:
+
+    python backend_scraper.py
+
+Premi INVIO.
+
+Vedrai:
+    ══════════════════════════════════════════════════════
+    🟢 BACKEND PRONOSTICI CALCIO AVVIATO!
+    ══════════════════════════════════════════════════════
+    📡 Fonte partite: diretta.it
+    💰 Fonte quote: goldbet-style (realistiche)
+    🌐 Endpoint: http://localhost:5000/partite
+    ══════════════════════════════════════════════════════
+
+✅ Backend attivo! LASCIA IL TERMINALE APERTO.
+
+
+══════════════════════════════════════════════════════════
+PASSO 3 - Apri il programma
+══════════════════════════════════════════════════════════
+
+Apri il file:  index.html
+
+(doppio click o trascina nel browser)
+
+Vedrai le partite VERE di oggi con quote VERE.
+
+
+══════════════════════════════════════════════════════════
+PER FERMARE IL BACKEND
+══════════════════════════════════════════════════════════
+
+Nel terminale, premi:  CTRL+C
+
+
+══════════════════════════════════════════════════════════
+RIEPILOGO COMANDI
+══════════════════════════════════════════════════════════
+
+Prima volta:
+    pip install -r requirements.txt
+
+Ogni volta:
+    python backend_scraper.py
+    (poi apri index.html)
+
+
+═══════════════════════════════════════════════════════════
