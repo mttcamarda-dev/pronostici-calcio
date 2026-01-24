@@ -1,13 +1,13 @@
 ╔═══════════════════════════════════════════════════════════════╗
-║  📊 PRONOSTICI CALCIO - PARTITE ULTRA-REALISTICHE            ║
+║  📊 PRONOSTICI CALCIO - PARTITE VERE DI OGGI                 ║
 ╚═══════════════════════════════════════════════════════════════╝
 
-🎯 SISTEMA ULTRA-REALISTICO:
-   • Squadre VERE (Serie A, Premier, La Liga, Bundesliga, Ligue 1)
-   • Statistiche VERE (forza, gol fatti, gol subiti)
-   • Quote REALISTICHE (calcolate da dati reali)
-   • Partite che CAMBIANO OGNI GIORNO
-   • Orari corretti per ogni giorno della settimana
+🎯 PARTITE VERE:
+   • Partite REALI che si giocano OGGI (24 gennaio 2026)
+   • Dati aggiornati da web search
+   • 21 partite di Serie A, Premier, La Liga, Bundesliga, Ligue 1
+   • Quote REALISTICHE calcolate automaticamente
+   • Orari VERI di ogni partita
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
@@ -21,42 +21,82 @@
 
    3️⃣  Apri il file index.html nel browser
 
-   4️⃣  GODITI le partite realistiche! ⚽
+   4️⃣  VEDI LE PARTITE VERE DI OGGI! ⚽
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-✨ CARATTERISTICHE:
+✨ PARTITE DI OGGI (sabato 24 gennaio 2026):
 
-   ✅ Partite diverse ogni giorno
-   ✅ Più partite nel weekend (Sabato/Domenica)
-   ✅ Anticipi il Venerdì
-   ✅ Posticipi il Lunedì
-   ✅ Infrasettimanali Mercoledì/Giovedì
-   ✅ Quote realistiche basate sulla forza delle squadre
-   ✅ Orari corretti per ogni campionato
-   ✅ ZERO registrazioni o API key
+   📍 SERIE A (3 partite):
+      • 15:00 - Como vs Torino
+      • 18:00 - Fiorentina vs Cagliari
+      • 20:45 - Lecce vs Lazio
+
+   📍 PREMIER LEAGUE (5 partite):
+      • 13:30 - West Ham vs Sunderland
+      • 16:00 - Man City vs Wolverhampton
+      • 16:00 - Burnley vs Tottenham
+      • 16:00 - Fulham vs Brighton
+      • 18:30 - Bournemouth vs Liverpool
+
+   📍 LA LIGA (4 partite):
+      • 14:00 - Rayo Vallecano vs Osasuna
+      • 16:15 - Valencia vs Espanyol
+      • 18:30 - Siviglia vs Athletic Bilbao
+      • 21:00 - Villarreal vs Real Madrid
+
+   📍 BUNDESLIGA (6 partite):
+      • 15:30 - Bayern vs Augsburg
+      • 15:30 - Eintracht vs Hoffenheim
+      • 15:30 - Heidenheim vs RB Leipzig
+      • 15:30 - Leverkusen vs Werder Bremen
+      • 15:30 - Mainz vs Wolfsburg
+      • 18:30 - Union Berlin vs Dortmund
+
+   📍 LIGUE 1 (3 partite):
+      • 17:00 - Rennes vs Lorient
+      • 19:00 - Le Havre vs Monaco
+      • 21:05 - Marseille vs Lens
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+💰 QUOTE REALISTICHE:
+
+   Le quote sono calcolate automaticamente basandosi su:
+   • Forza delle squadre (database interno)
+   • Fattore campo (+3 vantaggio casa)
+   • Statistiche gol fatti/subiti
+   • Forma attuale delle squadre
+
+   Esempi:
+   • Man City vs Wolves: 1.54 (City favorito)
+   • Lecce vs Lazio: 5.26 vs 1.61 (Lazio favorita)
+   • Como vs Torino: 2.67 vs 2.97 (equilibrato)
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ⚙️  DETTAGLI TECNICI:
 
-   Sistema: Python Flask + Generatore AI
-   Dati: Squadre e statistiche reali 2025/2026
-   Quote: Calcolate da algoritmo basato su:
-          - Forza squadra (0-100)
-          - Gol fatti medi
-          - Gol subiti medi
-          - Fattore campo (+3)
-   Aggiornamento: Automatico ogni giorno
+   Sistema: Python Flask + Web Search
+   Fonte partite: Web search aggiornato (dati reali)
+   Aggiornamento: Manuale via web search
+   Quote: Algoritmo basato su statistiche reali
+   File dati: partite_vere_oggi.json
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ❓ PROBLEMI?
 
-   • Se il backend non parte: controlla di avere Python 3 installato
-   • Se vedi "Failed to fetch": riavvia il backend (bash avvia.sh)
-   • Per fermare il backend: premi CTRL+C nel terminale
+   • Backend non parte: controlla Python 3 installato
+   • "Failed to fetch": riavvia backend (bash avvia.sh)
+   • Fermare backend: premi CTRL+C nel terminale
+   • Partite vecchie: il file JSON va aggiornato manualmente
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🎉 BUON DIVERTIMENTO!
+
+Fonti dati partite:
+• Sky Sport Italia
+• Calciomagazine
+• Diretta.it

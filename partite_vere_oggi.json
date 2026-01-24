@@ -1,0 +1,153 @@
+{
+  "data_aggiornamento": "2026-01-24",
+  "fonte": "Web search - dati reali",
+  "partite": [
+    {
+      "squadra_casa": "Como",
+      "squadra_trasferta": "Torino",
+      "orario": "15:00",
+      "competizione": "Serie A",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Fiorentina",
+      "squadra_trasferta": "Cagliari",
+      "orario": "18:00",
+      "competizione": "Serie A",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Lecce",
+      "squadra_trasferta": "Lazio",
+      "orario": "20:45",
+      "competizione": "Serie A",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "West Ham",
+      "squadra_trasferta": "Sunderland",
+      "orario": "13:30",
+      "competizione": "Premier League",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Manchester City",
+      "squadra_trasferta": "Wolverhampton",
+      "orario": "16:00",
+      "competizione": "Premier League",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Burnley",
+      "squadra_trasferta": "Tottenham",
+      "orario": "16:00",
+      "competizione": "Premier League",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Fulham",
+      "squadra_trasferta": "Brighton",
+      "orario": "16:00",
+      "competizione": "Premier League",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Bournemouth",
+      "squadra_trasferta": "Liverpool",
+      "orario": "18:30",
+      "competizione": "Premier League",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Rayo Vallecano",
+      "squadra_trasferta": "Osasuna",
+      "orario": "14:00",
+      "competizione": "La Liga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Valencia",
+      "squadra_trasferta": "Espanyol",
+      "orario": "16:15",
+      "competizione": "La Liga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Siviglia",
+      "squadra_trasferta": "Athletic Bilbao",
+      "orario": "18:30",
+      "competizione": "La Liga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Villarreal",
+      "squadra_trasferta": "Real Madrid",
+      "orario": "21:00",
+      "competizione": "La Liga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Bayern Munich",
+      "squadra_trasferta": "Augsburg",
+      "orario": "15:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Eintracht Frankfurt",
+      "squadra_trasferta": "Hoffenheim",
+      "orario": "15:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Heidenheim",
+      "squadra_trasferta": "RB Leipzig",
+      "orario": "15:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Bayer Leverkusen",
+      "squadra_trasferta": "Werder Bremen",
+      "orario": "15:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Mainz",
+      "squadra_trasferta": "Wolfsburg",
+      "orario": "15:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Union Berlin",
+      "squadra_trasferta": "Borussia Dortmund",
+      "orario": "18:30",
+      "competizione": "Bundesliga",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Rennes",
+      "squadra_trasferta": "Lorient",
+      "orario": "17:00",
+      "competizione": "Ligue 1",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Le Havre",
+      "squadra_trasferta": "Monaco",
+      "orario": "19:00",
+      "competizione": "Ligue 1",
+      "stato_partita": "Non iniziata"
+    },
+    {
+      "squadra_casa": "Marseille",
+      "squadra_trasferta": "Lens",
+      "orario": "21:05",
+      "competizione": "Ligue 1",
+      "stato_partita": "Non iniziata"
+    }
+  ]
+}

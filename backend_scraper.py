@@ -124,13 +124,41 @@ def try_football_data_scraping():
     return matches
 
 def get_todays_matches_from_diretta():
-    """Genera partite ULTRA-REALISTICHE con squadre vere e quote vere"""
+    """Carica partite VERE di oggi da file JSON aggiornato via web"""
 
-    print("\n⚽ GENERAZIONE PARTITE REALISTICHE...")
-    print("📊 Sistema: Squadre vere + Statistiche vere + Quote realistiche")
+    print("\n⚽ CARICAMENTO PARTITE VERE DI OGGI...")
+    print("📡 Fonte: Web search - Dati reali aggiornati")
 
     try:
-        # Esegui lo script Python che genera partite realistiche
+        # Leggi il file JSON con le partite vere
+        with open('partite_vere_oggi.json', 'r', encoding='utf-8') as f:
+            data = json.load(f)
+
+        matches = data.get('partite', [])
+        data_aggiornamento = data.get('data_aggiornamento', 'sconosciuta')
+
+        if len(matches) > 0:
+            print(f"✅ Caricate {len(matches)} partite VERE")
+            print(f"📅 Data aggiornamento: {data_aggiornamento}")
+            print(f"🌐 Fonte: {data.get('fonte', 'N/A')}")
+
+            # Mostra preview
+            print("\n📋 PARTITE DI OGGI:")
+            for i, m in enumerate(matches[:5], 1):
+                print(f"   {i}. {m['orario']} - {m['squadra_casa']} vs {m['squadra_trasferta']} ({m['competizione']})")
+            if len(matches) > 5:
+                print(f"   ... e altre {len(matches) - 5} partite")
+
+            return matches
+
+    except FileNotFoundError:
+        print("⚠️ File partite_vere_oggi.json non trovato")
+    except Exception as e:
+        print(f"⚠️ Errore caricamento partite: {e}")
+
+    # Fallback: prova il sistema realistico
+    print("\n🔄 Fallback: uso sistema partite realistiche")
+    try:
         result = subprocess.run(
             ['python3', 'partite_realistiche.py'],
             capture_output=True,
@@ -140,25 +168,12 @@ def get_todays_matches_from_diretta():
 
         if result.returncode == 0:
             data = json.loads(result.stdout)
-            matches = data.get('data', [])
-
-            # Le quote sono GIÀ incluse nel sistema realistico
-            # Non serve calcolarle nuovamente
-            print(f"✅ Generate {len(matches)} partite REALISTICHE")
-            print(f"📅 Giorno: {datetime.now().strftime('%A %d/%m/%Y')}")
-
-            # Mostra preview
-            for i, m in enumerate(matches[:3], 1):
-                print(f"   {i}. {m['squadra_casa']} vs {m['squadra_trasferta']} ({m['competizione']}) - {m['orario']}")
-            if len(matches) > 3:
-                print(f"   ... e altre {len(matches) - 3} partite")
-
-            return matches
+            return data.get('data', [])
 
     except Exception as e:
-        print(f"⚠️ Errore generazione partite: {e}")
+        print(f"⚠️ Errore fallback: {e}")
 
-    # Fallback minimale solo in caso di errore grave
+    # Fallback finale
     print("⚠️ Uso fallback di emergenza")
     return [
         {
